@@ -17,12 +17,12 @@ export class OrderController {
   }
   /**
    * get order by order number
-   * @param id 
+   * @param orderNumber 
    * @returns order
    */
-  @Get(':id')
-  findOne(@Param('id') id) {
-    return this.orderService.findOne(id);
+  @Get(':orderNumber')
+  findOne(@Param('orderNumber') orderNumber) {
+    return this.orderService.findOne(orderNumber);
   }
   /**
    * create order
@@ -30,8 +30,9 @@ export class OrderController {
    * @returns order
    */
   @Post()
-  create(@Body() dto: CreateOrderDto) {
-    const order = this.orderService.create(dto);
+  async create(@Body() dto: CreateOrderDto) {
+    const order = await this.orderService.create(dto);
+    
     if(!!order){
       this.orderService.pay(order);
     }
@@ -39,22 +40,22 @@ export class OrderController {
   }
   /**
    * cancel order
-   * @param id id number
+   * @param orderNumber
    * @returns status code
    */
-  @Put(':id/cancel')
-  cancel(@Param('id') id) {
-    this.orderService.cancel(id);
+  @Put(':orderNumber/cancel')
+  cancel(@Param('orderNumber') orderNumber) {
+    this.orderService.cancel(orderNumber);
     return {status: true};
   }
   /**
    * confirm order
-   * @param id 
+   * @param orderNumber 
    * @returns status code
    */
-  @Put(':id/confirm')
-  confirm(@Param('id') id) {
-    this.orderService.confirm(id);
+  @Put(':orderNumber/confirm')
+  confirm(@Param('orderNumber') orderNumber) {
+    this.orderService.confirm(orderNumber);
     return {status: true};
   }
 

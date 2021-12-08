@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { OrderEntity, Status } from './order.entity' 
 import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateResult, DeleteResult, Repository } from  'typeorm';
+import { UpdateResult, DeleteResult, Repository, createConnection, getRepository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ConfigService } from '@nestjs/config';
 @Injectable()
@@ -16,23 +16,26 @@ export class OrderService {
     return await this.orderRepo.find();
   }
   /**Get 1 by orderNumber */
-  async findOne (id: number): Promise<OrderEntity> {
-    return await this.orderRepo.findOne({id})
+  async findOne (orderNumber): Promise<OrderEntity> {
+    return await this.orderRepo.findOne({orderNumber})
   }
   /**create order */
-  create(dto: CreateOrderDto): OrderEntity {
+  async create(dto: CreateOrderDto): Promise<OrderEntity> {
+    const connection = await createConnection();
+    const orderRepository = getRepository(OrderEntity);
     try {
       const order = new OrderEntity();
       order.name = dto.name;
       order.description = dto.description;
       order.price = dto.price;
       order.orderNumber = this.makeid(8);
-      this.orderRepo.insert(order);
+      order.id = (await orderRepository.insert(order)).generatedMaps[0].id;
+      await connection.close()
       return order;
     } catch (error) {
       return null;
     }
-}
+  }
 
   async update(order: OrderEntity): Promise<UpdateResult> {
     return await this.orderRepo.update(order.id, order);
@@ -40,16 +43,16 @@ export class OrderService {
   /**cancel order
    * @param orderNumber 
    */
-  async cancel(id: number): Promise<UpdateResult> {
+  async cancel(orderNumber: string): Promise<UpdateResult> {
     return this.orderRepo.update(
-        { id },
+        { orderNumber },
         { status: Status.CANCELLED, updateTimestamp: new Date() },
     );
   }
   /**confirm order */
-  async confirm(id: number): Promise<UpdateResult> {
+  async confirm(orderNumber: string): Promise<UpdateResult> {
     return this.orderRepo.update(
-        { id },
+        { orderNumber },
         { status: Status.CONFIRMED, updateTimestamp: new Date() },
     );
   }
@@ -82,6 +85,7 @@ export class OrderService {
         description: order.description,
         price: order.price,
         orderNumber: order.orderNumber,
+        orderId: order.id
     });
 
     const options = {
@@ -115,7 +119,7 @@ export class OrderService {
                 self.cancel(responseJson.orderNumber);
             }
             else{
-              //
+              // 
             }
         });
     });

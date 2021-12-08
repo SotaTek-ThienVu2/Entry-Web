@@ -10,6 +10,9 @@ export class PaymentEntity {
     /**ID */
     @PrimaryGeneratedColumn()
     id: number;
+    /**orderId */
+    @Column()
+    orderId: number;
     /**Order number */
     @Column({length: 8, unique: true})
     orderNumber: string;

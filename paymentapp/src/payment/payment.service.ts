@@ -35,6 +35,7 @@ export class PaymentService {
             payment.description = dto.description;
             payment.price = dto.price;
             payment.orderNumber = dto.orderNumber;
+            payment.orderId = dto.orderId;
             //random result
             payment.status = Math.floor(Math.random() * 2) == 0 ? Status.CONFIRMED : Status.CANCELLED;
             this.paymentRepository.insert(payment);
