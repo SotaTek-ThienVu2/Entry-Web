@@ -3,12 +3,13 @@ import { OrderEntity, Status } from './order.entity'
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult, Repository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
-
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
+    private configService: ConfigService
   ) {}
   /**Get all order */
   async findAll (): Promise<OrderEntity[]> {
@@ -25,7 +26,7 @@ export class OrderService {
       order.name = dto.name;
       order.description = dto.address;
       order.price = dto.price;
-      order.orderNumber = this.makeid(5);
+      order.orderNumber = this.makeid(8);
       this.orderRepo.insert(order);
       return order;
     } catch (error) {
@@ -73,8 +74,8 @@ export class OrderService {
   }
   /**call payment and handle */
   doPayment(order: OrderEntity) {
+    const delayTime = this.configService.get('X_SECOND');
     const self = this;
-    
     const http = require('http');
     const data = JSON.stringify({
         name: order.name,
@@ -109,7 +110,7 @@ export class OrderService {
                         { status: Status.DELIVERED, updateTimestamp: new Date() },
                     );
 
-                }, 5000);
+                }, delayTime);
             } else if(responseJson.status === Status.CANCELLED) {
                 self.cancel(responseJson.orderNumber);
             }
