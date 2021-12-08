@@ -22,7 +22,7 @@ export class PaymentService {
      * @param dto paymentdto
      * @returns payment
      */
-    async add(dto: CreatePaymentDto): Promise<PaymentEntity> {
+    async create(dto: CreatePaymentDto): Promise<PaymentEntity> {
         /**if found return payment by ordernumber
          * else
          * insert new payment then return it

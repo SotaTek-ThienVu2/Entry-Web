@@ -3,10 +3,11 @@ import { OrderService } from './order.service';
 import { OrderEntity } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 
-
-@Controller('order')
+@Controller('orders')
 export class OrderController {
-  constructor(private readonly orderService: OrderService) {}
+  constructor(
+    private readonly orderService: OrderService,
+    ) {}
   /**
    * @returns All order
    */
@@ -16,12 +17,12 @@ export class OrderController {
   }
   /**
    * get order by order number
-   * @param orderNumber 
+   * @param id 
    * @returns order
    */
-  @Get(':orderNumber')
-  findOne(@Param('orderNumber') orderNumber) {
-    return this.orderService.findOne(orderNumber);
+  @Get(':id')
+  findOne(@Param('id') id) {
+    return this.orderService.findOne(id);
   }
   /**
    * create order
@@ -30,30 +31,30 @@ export class OrderController {
    */
   @Post()
   create(@Body() dto: CreateOrderDto) {
-    const order = this.orderService.add(dto);
+    const order = this.orderService.create(dto);
     if(!!order){
-      this.orderService.doPayment(order);
+      this.orderService.pay(order);
     }
     return order;
   }
   /**
    * cancel order
-   * @param orderNumber order number
+   * @param id id number
    * @returns status code
    */
-  @Put('cancel/:orderNumber')
-  cancel(@Param('orderNumber') orderNumber) {
-    this.orderService.cancel(orderNumber);
+  @Put(':id/cancel')
+  cancel(@Param('id') id) {
+    this.orderService.cancel(id);
     return {status: true};
   }
   /**
    * confirm order
-   * @param orderNumber 
+   * @param id 
    * @returns status code
    */
-  @Put('confirm/:orderNumber')
-  confirm(@Param('orderNumber') orderNumber) {
-    this.orderService.confirm(orderNumber);
+  @Put(':id/confirm')
+  confirm(@Param('id') id) {
+    this.orderService.confirm(id);
     return {status: true};
   }
 

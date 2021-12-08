@@ -16,15 +16,15 @@ export class OrderService {
     return await this.orderRepo.find();
   }
   /**Get 1 by orderNumber */
-  async findOne (orderNumber: string): Promise<OrderEntity> {
-    return await this.orderRepo.findOne({orderNumber})
+  async findOne (id: number): Promise<OrderEntity> {
+    return await this.orderRepo.findOne({id})
   }
-
-  add(dto: CreateOrderDto): OrderEntity {
+  /**create order */
+  create(dto: CreateOrderDto): OrderEntity {
     try {
       const order = new OrderEntity();
       order.name = dto.name;
-      order.description = dto.address;
+      order.description = dto.description;
       order.price = dto.price;
       order.orderNumber = this.makeid(8);
       this.orderRepo.insert(order);
@@ -40,16 +40,16 @@ export class OrderService {
   /**cancel order
    * @param orderNumber 
    */
-  async cancel(orderNumber: string): Promise<UpdateResult> {
+  async cancel(id: number): Promise<UpdateResult> {
     return this.orderRepo.update(
-        { orderNumber },
+        { id },
         { status: Status.CANCELLED, updateTimestamp: new Date() },
     );
   }
   /**confirm order */
-  async confirm(orderNumber: string): Promise<UpdateResult> {
+  async confirm(id: number): Promise<UpdateResult> {
     return this.orderRepo.update(
-        { orderNumber },
+        { id },
         { status: Status.CONFIRMED, updateTimestamp: new Date() },
     );
   }
@@ -73,7 +73,7 @@ export class OrderService {
     return result;
   }
   /**call payment and handle */
-  doPayment(order: OrderEntity) {
+  pay(order: OrderEntity) {
     const delayTime = this.configService.get('X_SECOND');
     const self = this;
     const http = require('http');

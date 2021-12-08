@@ -19,7 +19,7 @@ export class OrderEntity {
     @Column({length: 255})
     name: string;
     /**description */
-    @Column('text')
+    @Column({length: 255})
     description: string;
     /**price */
     @Column()

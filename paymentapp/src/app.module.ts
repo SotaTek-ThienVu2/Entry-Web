@@ -1,20 +1,16 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentModule } from './payment/payment.module';
+import { ConfigModule } from '@nestjs/config';
+import {typeOrmConfig} from './config/typeorm.config'
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'dev',
-      password: '123456',
-      database: 'payment',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(typeOrmConfig),
     PaymentModule,
+    ConfigModule.forRoot({
+      isGlobal: true
+    })
   ],
 })
 export class AppModule {}
