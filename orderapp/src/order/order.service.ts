@@ -15,44 +15,41 @@ export class OrderService {
   async findAll (): Promise<OrderEntity[]> {
     return await this.orderRepo.find();
   }
-  /**Get 1 by orderNumber */
-  async findOne (orderNumber): Promise<OrderEntity> {
-    return await this.orderRepo.findOne({orderNumber})
+  /**Get 1 by id */
+  async findOne (id): Promise<OrderEntity> {
+    return await this.orderRepo.findOne({id})
   }
   /**create order */
   async create(dto: CreateOrderDto): Promise<OrderEntity> {
-    const connection = await createConnection();
-    const orderRepository = getRepository(OrderEntity);
     try {
       const order = new OrderEntity();
       order.name = dto.name;
       order.description = dto.description;
       order.price = dto.price;
       order.orderNumber = this.makeid(8);
-      order.id = (await orderRepository.insert(order)).generatedMaps[0].id;
-      await connection.close()
+      order.id = (await this.orderRepo.insert(order)).generatedMaps[0].id;
       return order;
     } catch (error) {
       return null;
     }
   }
-
+  /**update */
   async update(order: OrderEntity): Promise<UpdateResult> {
     return await this.orderRepo.update(order.id, order);
   }
   /**cancel order
-   * @param orderNumber 
+   * @param id 
    */
-  async cancel(orderNumber: string): Promise<UpdateResult> {
+  async cancel(id: number): Promise<UpdateResult> {
     return this.orderRepo.update(
-        { orderNumber },
+        { id },
         { status: Status.CANCELLED, updateTimestamp: new Date() },
     );
   }
   /**confirm order */
-  async confirm(orderNumber: string): Promise<UpdateResult> {
+  async confirm(id: number): Promise<UpdateResult> {
     return this.orderRepo.update(
-        { orderNumber },
+        { id },
         { status: Status.CONFIRMED, updateTimestamp: new Date() },
     );
   }
@@ -107,25 +104,23 @@ export class OrderService {
         res.on('end', () => {
             const responseJson = JSON.parse(responseString);
             if (responseJson.status === Status.CONFIRMED) {
-                self.confirm(responseJson.orderNumber);
+                self.confirm(responseJson.orderId);
                 setTimeout(() => {
                     self.orderRepo.update(
-                        { orderNumber: responseJson.orderNumber },
+                        { id: responseJson.orderId },
                         { status: Status.DELIVERED, updateTimestamp: new Date() },
                     );
 
                 }, delayTime);
             } else if(responseJson.status === Status.CANCELLED) {
-                self.cancel(responseJson.orderNumber);
+                self.cancel(responseJson.orderId);
             }
             else{
               // 
             }
         });
     });
-
     req.write(data);
     req.end();
-
 }
 }
