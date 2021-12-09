@@ -1,38 +1,84 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400&display=swap");
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.App{
+  background: linear-gradient(to right, #4daf54, #3d8880);
+  height: 100vh;
+  position: relative;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header{
   display: flex;
-  flex-direction: column;
+  height: 150px;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  width: 100%;
+  background: #9994949e;
 }
-
-.App-link {
-  color: #61dafb;
+.header-container{
+  width: 80%;
+  display: flex;
+  justify-content: space-around;
+  margin: 0 auto;
+  align-items: center;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.header-logo{
+  width: 150px;
+  height: auto;
+}
+.input-search{
+  height: 40px;
+  width: 100%;
+  border-radius: 10px;
+  border-color: #ffffff;
+  outline: none;
+  padding: 0 15px;
+}
+.input-search:focus {
+  border: solid 1px #b7ffcd;
+  outline: none;
+  height: 40px;
+}
+.container{
+  width: 80%;
+  margin: 0 auto;
+}
+.button-action{
+  height: 30px;
+  padding: 5px 13px;
+  margin: 0 5px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  width: 30%;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+.green{
+  background: #6fcf6f;
+}
+.green:hover{
+  background: #5db15d;
+}
+.red{
+  background: #e0605b;
+}
+.red:hover{
+  background: #b34b48;
+}
+.general-action{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+.refresh-btn, .create-btn{
+  height: 55px !important;
+  color: #000 !important;
+}
+.refresh-btn:hover, .create-btn:hover{
+  background: #d1d1d1;
 }

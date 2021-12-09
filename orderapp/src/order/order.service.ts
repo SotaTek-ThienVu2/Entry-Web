@@ -98,6 +98,7 @@ export class OrderService {
   /**call payment and handle */
   pay(order: OrderEntity) {
     const delayTime = this.configService.get('X_SECOND');
+    const paymentUrl = this.configService.get('PAYMENT_URL');
     const headersRequest = {
         'Secret-key': this.configService.get('SECRET_KEY_ORDER'),
     };
@@ -109,7 +110,7 @@ export class OrderService {
         orderNumber: order.orderNumber,
         orderId: order.id
     };
-    this.httpService.post('http://localhost:3001/payment', data, { headers: headersRequest })
+    this.httpService.post(paymentUrl , data, { headers: headersRequest })
     .pipe(
       catchError(e => {
         throw new HttpException(e.response.data, e.response.status);
