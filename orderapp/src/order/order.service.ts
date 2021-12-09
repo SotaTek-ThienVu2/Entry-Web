@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { OrderEntity, Status } from './order.entity' 
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult, Repository, createConnection, getRepository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ConfigService } from '@nestjs/config';
+import { HttpService } from '@nestjs/axios';
+import { catchError, tap } from 'rxjs/operators';
 @Injectable()
 export class OrderService {
   constructor(
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private httpService: HttpService
   ) {}
   /**Get all order */
   async findAll (): Promise<OrderEntity[]> {
@@ -75,52 +78,41 @@ export class OrderService {
   /**call payment and handle */
   pay(order: OrderEntity) {
     const delayTime = this.configService.get('X_SECOND');
+    const headersRequest = {
+        'Secret-key': this.configService.get('SECRET_KEY_ORDER'),
+    };
     const self = this;
-    const http = require('http');
-    const data = JSON.stringify({
+    const data = {
         name: order.name,
         description: order.description,
         price: order.price,
         orderNumber: order.orderNumber,
         orderId: order.id
-    });
-
-    const options = {
-        hostname: 'localhost',
-        port: 3001,
-        path: '/payment',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': data.length,
-        },
     };
-    const req = http.request(options, (res) => {
-        let responseString = '';
+    this.httpService.post('http://localhost:3001/payment', data, { headers: headersRequest })
+    .pipe(
+      catchError(e => {
+        throw new HttpException(e.response.data, e.response.status);
+      }),
+      tap(response => {
+        if(!response.data){self.delete(data.orderId)}
+      })
+    )
+    .subscribe(
+      res => {
+        let data = res.data;
+        if (data.status === Status.CONFIRMED) {
+            self.confirm(data.orderId);
+            setTimeout(() => {
+                self.orderRepo.update(
+                    { id: data.orderId },
+                    { status: Status.DELIVERED, updateTimestamp: new Date() },
+                );
+            }, delayTime);
+        } else if(data.status === Status.CANCELLED) {
+            self.cancel(data.orderId);
+        }
+    })
 
-        res.on('data', (responseData) => {
-            responseString += responseData;
-        });
-        res.on('end', () => {
-            const responseJson = JSON.parse(responseString);
-            if (responseJson.status === Status.CONFIRMED) {
-                self.confirm(responseJson.orderId);
-                setTimeout(() => {
-                    self.orderRepo.update(
-                        { id: responseJson.orderId },
-                        { status: Status.DELIVERED, updateTimestamp: new Date() },
-                    );
-
-                }, delayTime);
-            } else if(responseJson.status === Status.CANCELLED) {
-                self.cancel(responseJson.orderId);
-            }
-            else{
-              // 
-            }
-        });
-    });
-    req.write(data);
-    req.end();
 }
 }

@@ -44,9 +44,9 @@ export class OrderController {
    * @returns status code
    */
   @Put(':id/cancel')
-  cancel(@Param('id') id) {
-    this.orderService.cancel(id);
-    return {status: true};
+  async cancel(@Param('id') id) {
+    let cancelResult = await  this.orderService.cancel(id);
+    return cancelResult.affected;
   }
   /**
    * confirm order
@@ -54,9 +54,9 @@ export class OrderController {
    * @returns status code
    */
   @Put(':id/confirm')
-  confirm(@Param('id') id) {
-    this.orderService.confirm(id);
-    return {status: true};
+  async confirm(@Param('id') id) {
+    let confirmResult = await this.orderService.confirm(id);
+    return confirmResult.affected;
   }
 
 }
