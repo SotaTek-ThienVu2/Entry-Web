@@ -44,17 +44,31 @@ export class OrderService {
    * @param id 
    */
   async cancel(id: number): Promise<UpdateResult> {
-    return this.orderRepo.update(
-        { id },
-        { status: Status.CANCELLED, updateTimestamp: new Date() },
-    );
+    let order = await this.orderRepo.findOne({id});
+    if(order.status === Status.CREATED || order.status === Status.CONFIRMED){
+      return this.orderRepo.update(
+          { id },
+          { status: Status.CANCELLED, updateTimestamp: new Date() },
+      );
+    }else{
+      let rs = new UpdateResult;
+      rs.affected = 0;
+      return rs;
+    }
   }
   /**confirm order */
   async confirm(id: number): Promise<UpdateResult> {
-    return this.orderRepo.update(
-        { id },
-        { status: Status.CONFIRMED, updateTimestamp: new Date() },
-    );
+    let order = await this.orderRepo.findOne({id});
+    if (order.status === Status.CREATED) {
+      return this.orderRepo.update(
+          { id },
+          { status: Status.CONFIRMED, updateTimestamp: new Date() },
+      );
+    }else{
+      let rs = new UpdateResult;
+      rs.affected = 0;
+      return rs;
+    }
   }
   /**
    * delete (may be use)
