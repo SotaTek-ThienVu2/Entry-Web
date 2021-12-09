@@ -1,12 +1,15 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe,HttpStatus } from '@nestjs/common';
 import { OrderService } from './order.service';
+import { OrderHistoryService } from './order-history.service';
 import { OrderEntity } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiParam, ApiBody, ApiOperation, ApiForbiddenResponse } from '@nestjs/swagger';
+import { string } from 'joi';
 @Controller('orders')
 export class OrderController {
   constructor(
     private readonly orderService: OrderService,
+    private readonly orderHistoryService: OrderHistoryService,
     ) {}
   /**
    * @returns All order
@@ -28,6 +31,17 @@ export class OrderController {
   findOne(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id) {
     return this.orderService.findOne(id);
   }
+  /**
+   * get order detail by order number
+   * @param orderNumber 
+   * @returns order
+   */
+   @Get(':orderNumber/detail')
+   @ApiOperation({ summary: 'Get order detail by orderNumber' })
+   @ApiParam({name: 'orderNumber', required: true})
+   findDetail(@Param('orderNumber') orderNumber) {
+     return this.orderHistoryService.findByOrderNumber(orderNumber);
+   }
   /**
    * create order
    * @param dto CreateOrderDto

@@ -1,10 +1,12 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { OrderEntity, Status } from './order.entity' 
+import { OrderHistory } from './order-history.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult, Repository, createConnection, getRepository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
+import { OrderHistoryService } from './order-history.service';
 import { catchError, tap } from 'rxjs/operators';
 @Injectable()
 export class OrderService {
@@ -12,7 +14,8 @@ export class OrderService {
     @InjectRepository(OrderEntity)
     private readonly orderRepo: Repository<OrderEntity>,
     private configService: ConfigService,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private readonly orderHistoryService: OrderHistoryService,
   ) {}
   /**Get all order */
   async findAll (): Promise<OrderEntity[]> {
@@ -31,6 +34,7 @@ export class OrderService {
       order.price = dto.price;
       order.orderNumber = this.makeid(8);
       order.id = (await this.orderRepo.insert(order)).generatedMaps[0].id;
+      this.orderHistoryService.create(order.orderNumber, Status.CREATED);
       return order;
     } catch (error) {
       return null;
@@ -45,6 +49,7 @@ export class OrderService {
    */
   async cancel(id: number): Promise<UpdateResult> {
     let order = await this.orderRepo.findOne({id});
+    this.orderHistoryService.create(order.orderNumber, Status.CANCELLED);
     if(order.status === Status.CREATED || order.status === Status.CONFIRMED){
       return this.orderRepo.update(
           { id },
@@ -59,6 +64,7 @@ export class OrderService {
   /**confirm order */
   async confirm(id: number): Promise<UpdateResult> {
     let order = await this.orderRepo.findOne({id});
+    this.orderHistoryService.create(order.orderNumber, Status.CONFIRMED);
     if (order.status === Status.CREATED) {
       return this.orderRepo.update(
           { id },
@@ -122,6 +128,7 @@ export class OrderService {
                     { id: data.orderId },
                     { status: Status.DELIVERED, updateTimestamp: new Date() },
                 );
+                this.orderHistoryService.create(order.orderNumber, Status.DELIVERED);
             }, delayTime);
         } else if(data.status === Status.CANCELLED) {
             self.cancel(data.orderId);
