@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe,HttpStatus } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderEntity } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
-
+import { ApiCreatedResponse, ApiOkResponse, ApiParam, ApiBody, ApiOperation, ApiForbiddenResponse } from '@nestjs/swagger';
 @Controller('orders')
 export class OrderController {
   constructor(
@@ -12,6 +12,8 @@ export class OrderController {
    * @returns All order
    */
   @Get()
+  @ApiOperation({ summary: 'Get all order' })
+  @ApiOkResponse()
   findAll(): Promise<OrderEntity[]> {
     return this.orderService.findAll()
   }
@@ -21,7 +23,9 @@ export class OrderController {
    * @returns order
    */
   @Get(':id')
-  findOne(@Param('id') id) {
+  @ApiOperation({ summary: 'Get order by id' })
+  @ApiParam({name: 'id', required: true})
+  findOne(@Param('id', new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id) {
     return this.orderService.findOne(id);
   }
   /**
@@ -30,6 +34,8 @@ export class OrderController {
    * @returns order
    */
   @Post()
+  @ApiOperation({ summary: 'Create order' })
+  @ApiBody({ type: CreateOrderDto, required: true, })
   async create(@Body() dto: CreateOrderDto) {
     const order = await this.orderService.create(dto);
     
@@ -44,7 +50,9 @@ export class OrderController {
    * @returns status code
    */
   @Put(':id/cancel')
-  async cancel(@Param('id') id) {
+  @ApiOperation({ summary: 'Cancel order' })
+  @ApiParam({name: 'id', required: true})
+  async cancel(@Param('id',new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id) {
     let cancelResult = await  this.orderService.cancel(id);
     return cancelResult.affected;
   }
@@ -54,7 +62,9 @@ export class OrderController {
    * @returns status code
    */
   @Put(':id/confirm')
-  async confirm(@Param('id') id) {
+  @ApiOperation({ summary: 'Confirm order' })
+  @ApiParam({name: 'id', required: true})
+  async confirm(@Param('id',new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id) {
     let confirmResult = await this.orderService.confirm(id);
     return confirmResult.affected;
   }
