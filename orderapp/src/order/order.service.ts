@@ -32,6 +32,10 @@ export class OrderService {
       order.name = dto.name;
       order.description = dto.description;
       order.price = dto.price;
+      order.address = dto.address;
+      order.quantity = dto.quantity;
+      order.category = dto.category;
+      order.image = dto.image;
       order.orderNumber = this.makeid(8);
       order.id = (await this.orderRepo.insert(order)).generatedMaps[0].id;
       this.orderHistoryService.create(order.orderNumber, Status.CREATED);
@@ -108,7 +112,11 @@ export class OrderService {
         description: order.description,
         price: order.price,
         orderNumber: order.orderNumber,
-        orderId: order.id
+        orderId: order.id,
+        address: order.address,
+        quantity: order.quantity,
+        image: order.image,
+        category: order.category
     };
     this.httpService.post(paymentUrl , data, { headers: headersRequest })
     .pipe(

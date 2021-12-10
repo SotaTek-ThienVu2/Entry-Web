@@ -1,4 +1,4 @@
-import { IsString, IsInt, IsNumber } from 'class-validator';
+import { IsString, IsInt, IsNumber, IsUrl } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreatePaymentDto {
     @ApiProperty()
@@ -19,4 +19,13 @@ export class CreatePaymentDto {
     @ApiProperty()
     @IsString()
     readonly orderNumber: string;
+    @ApiProperty()
+    @IsInt()
+    readonly quantity: number;
+    @ApiProperty()
+    @IsString()
+    readonly category: string;
+    @ApiProperty()
+    @IsUrl()
+    readonly image: string;
 }

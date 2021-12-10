@@ -19,12 +19,20 @@ export class PaymentEntity {
     /**name */
     @Column({length: 255})
     name: string;
+    @Column({length: 255})
+    category: string;
+    @Column('text')
+    image: string;
+    @Column('text')
+    address: string;
     /**description */
     @Column('text')
     description: string;
     /**price */
     @Column()
     price: number;
+    @Column()
+    quantity: number;
     /**status */
     @Column({
         type: 'enum',
