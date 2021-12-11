@@ -48,3 +48,7 @@ textarea{
 .form-footer button:hover{
     background: #2f31ce;
 }
+.error {
+    color:red;
+    list-style-type: none;
+}

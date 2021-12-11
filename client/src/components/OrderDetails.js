@@ -19,6 +19,13 @@ const OrderDetails = () => {
     dispatch(selectedOrder(response?.data));
   };
 
+  // const fetchOrderDetail = async (id) => {
+  //   const response = await axios
+  //     .get(`http://localhost:3000/orders/${orderNumber}/detail`)
+  //     .catch((err) => {});
+  //   dispatch(selectedOrder(response?.data));
+  // };
+
   useEffect(() => {
     if (id && id !== "") fetchOrderDetail(id);
     return () => {

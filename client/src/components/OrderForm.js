@@ -1,104 +1,120 @@
 import React, { useState } from 'react'
+import { useHistory } from "react-router-dom"
 import './Form.css'
-import useModal from './useModal'
-const OrderForm = () => {
-
-    const [formData, setFormData] = useState({
-        name: "",
-        price: "",
-        address:"",
-        quantity: 0,
-        description:"",
-        category:"",
-        image:""
-      })
-    const handleChange = e => {
-        const { name, value } = e.target;
-        setFormData({
-          ...formData,
-          [name]: value
-        });
-      };
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(formData);
+import { useForm } from "react-hook-form"
+const OrderForm = ({hide}) => {
+    const { register, handleSubmit, formState: { errors } } = useForm()
+    const history = useHistory() 
+    const onSubmit = (data) => {
+        hide()
     }
     return (
-    <form className='form' onSubmit={handleSubmit}>
-        <div className="form-content">
-        <div className="col-6">
-        <div className='form-control'>
-            <label htmlFor='name'>Name: </label>
-            <input
-                type='text'
-                id='name'
-                name='name'
-                value={formData.name}
-                onChange={handleChange}
-            />
-        </div>
-        
-        <div className='form-control'>
-            <label htmlFor='price'>Price: </label>
-            <input
-                type='textarea'
-                id='price'
-                name='price'
-                value={formData.price}
-                onChange={handleChange}
-            />
-        </div>
-        <div className='form-control'>
-            <label htmlFor='address'>Address: </label>
-            <textarea
-                id='address'
-                name='address'
-                value={formData.address}
-                onChange={handleChange}
-            />
-        </div>
+        <form className='form' onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-content">
+                <div className="col-6">
+                    <div className='form-control'>
+                        <label htmlFor='name'>Name: </label>
+                        <input
+                            type='text'
+                            id='name'
+                            name='name'
+                            {...register("name", { required: true, minLength: 6 })}
+                        />
+                        {Object.keys(errors).length !== 0 && (<ul className="error">
+                            {errors.name?.type === 'required' && <li>name is required!</li>}
+                        </ul>)
+                        }
+                    </div>
+                    <div className='form-control'>
+                        <label htmlFor='price'>Price: </label>
+                        <input
+                            type='textarea'
+                            id='price'
+                            name='price'
+                            {...register("price", { required: true })}
+                        />
+                        {Object.keys(errors).length !== 0 && (<ul className="error">
+                            {errors.price?.type === 'required' && <li>price is required!</li>}
+                        </ul>)
+                        }
+                    </div>
+                    <div className='form-control'>
+                        <label htmlFor='address'>Address: </label>
+                        <textarea
+                            id='address'
+                            name='address'
+                            {...register("address", { required: true })}
+                        />
+                        {Object.keys(errors).length !== 0 &&
+                            (<ul className="error">
+                                {errors.address?.type === 'required' && <li>address is required!</li>}
+                            </ul>)
+                        }
+                    </div>
+                    <div className='form-control'>
+                        <label htmlFor='price'>Product Image: </label>
+                        <input type="url"
+                            name="image"
+                            id="image"
+                            {...register("image", { required: true })}
+                            placeholder='Product image url...' />
+                        {Object.keys(errors).length !== 0 &&
+                            (<ul className="error">
+                                {errors.image?.type === 'required' && <li>image is required!</li>}
 
-        <div className='form-control'>
-            <label htmlFor='price'>Product Image: </label>
-            <input type="url" name="image" id="image" value={formData.description} onChange={handleChange} placeholder='Product image url...'/>
-        </div>
-        </div>
-        <div className="col-6">
-        <div className='form-control'>
-            <label htmlFor='category'>Category: </label>
-            <input
-                type='text'
-                id='category'
-                name='category'
-                value={formData.category}
-                onChange={handleChange}
-            />
-        </div>
-        <div className='form-control'>
-            <label htmlFor='quantity'>Quantity: </label>
-            <input
-                type='number'
-                id='quantity'
-                name='quantity'
-                value={formData.quantity}
-                onChange={handleChange}
-            />
-        </div>
-        <div className='form-control'>
-            <label htmlFor='description'>Description: </label>
-            <textarea
-                id='description'
-                name='description'
-                value={formData.description}
-                onChange={handleChange}
-            />
-        </div>
-        </div>
-        </div>
-        <div className='form-footer'>
-        <button type="submit" onClick={handleSubmit}>Create</button>
-        </div>
-    </form>
+                            </ul>)
+                        }
+                    </div>
+                </div>
+                <div className="col-6">
+                    <div className='form-control'>
+                        <label htmlFor='category'>Category: </label>
+                        <input
+                            type='text'
+                            id='category'
+                            name='category'
+                            {...register("category", { required: true })}
+                        />
+                        {Object.keys(errors).length !== 0 &&
+                            (<ul className="error">
+                                {errors.category?.type === 'required' && <li>category is required!</li>}
+
+                            </ul>)
+                        }
+
+                    </div>
+                    <div className='form-control'>
+                        <label htmlFor='quantity'>Quantity: </label>
+                        <input
+                            type='number'
+                            id='quantity'
+                            name='quantity'
+                            {...register("quantity", { required: true })}
+                        />
+                        {Object.keys(errors).length !== 0 &&
+                            (<ul className="error">
+                                {errors.quantity?.type === 'required' && <li>quantity is required!</li>}
+                            </ul>)}
+
+                    </div>
+                    <div className='form-control'>
+                        <label htmlFor='description'>Description: </label>
+                        <textarea
+                            id='description'
+                            name='description'
+                            {...register("description", { required: true })}
+                        />
+                        {Object.keys(errors).length !== 0 &&
+                            (<ul className="error">
+                                {errors.description?.type === 'required' && <li> description is required!</li>}
+                            </ul>)}
+                    </div>
+                </div>
+            </div>
+            <div className='form-footer'>
+                <button type="submit" >Create</button>
+            </div>
+        </form>
     )
 }
 
