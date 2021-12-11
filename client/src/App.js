@@ -1,32 +1,23 @@
-
-import './App.css';
-import { Provider } from 'react-redux';
-import store from './redux/store';
-import Cart from './components/Cart/Cart';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import OrderListing from "./components/OrderListing";
+import Header from "./components/Header";
+import "./App.css";
+import OrderDetails from "./components/OrderDetails";
 
 function App() {
   return (
-    <Provider store = {store}>
-      <div className="App">
-        <div className="header">
-          <div className='header-container'>
-            <img src="sotatek.png" alt="sotatek" className='header-logo' />
-            <input type="search" name="search" id="search" className='input-search' placeholder='Search your order'/>
-          </div>
-        </div>
-        <div className="container">
-          <div className="main general-action">
-          <button className='button-action refresh-btn'>Refresh</button>
-          <button className='button-action create-btn'>Create New Order</button>
-          </div>
-        </div>
-        <div className='container'>
-          <div className="main">
-            <Cart />
-          </div>
-        </div>
-      </div>
-    </Provider>   
+    <div className="App">
+      <Router>
+        <Header />
+        <Switch>
+          <Route path="/" exact component={OrderListing} />
+          <Route path="/order/:id"  component={OrderDetails} />
+          <Route>404 Not Found!</Route>
+        </Switch>
+      </Router>
+    </div>
   );
 }
+
 export default App;
