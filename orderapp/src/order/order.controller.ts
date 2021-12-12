@@ -20,6 +20,14 @@ export class OrderController {
   findAll(): Promise<OrderEntity[]> {
     return this.orderService.findAll()
   }
+
+  // @Get('search/:text')
+  // @ApiOperation({ summary: 'Get all order' })
+  // @ApiOkResponse()
+  // @ApiParam({name: 'text', required: true})
+  // searchByName(@Param('orderNumber') text): Promise<OrderEntity[]> {
+  //   return this.orderService.searchByName(text)
+  // }
   /**
    * get order by order number
    * @param id 

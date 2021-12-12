@@ -1,6 +1,7 @@
 import { ActionTypes } from "../constants/action-types";
 const intialState = {
   orders: [],
+  orderHistory:[]
 };
 
 export const ordersReducer = (state = intialState, { type, payload }) => {
@@ -22,3 +23,13 @@ export const selectedOrdersReducer = (state = {}, { type, payload }) => {
       return state;
   }
 };
+
+export const ordersHistoryReducer = (state = intialState.orderHistory, { type, payload }) => {
+  switch (type) {
+    case 'SET_ORDER_HISTORY':
+      return { ...state, orderHistory: payload };
+    default:
+      return state;
+  }
+};
+

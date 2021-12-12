@@ -1,10 +1,22 @@
+import axios from "axios";
 import React, { useState } from 'react'
 import './Form.css'
 import { useForm } from "react-hook-form"
 const OrderForm = ({hide}) => {
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const createOrder = async (data) => {
+        const response = await axios
+        .post(`${process.env.REACT_APP_API_ENDPOINT}/orders`, data)
+        .catch((err) => {});
+        if(!!response.data){
+            alert("Created order success !!!")
+        }
+        else{
+            alert("Something was wrong, try again !!!")
+        }
+    };
     const onSubmit = (data) => {
-        console.log(data);
+        createOrder(data);
         hide()
     }
     return (
@@ -27,7 +39,7 @@ const OrderForm = ({hide}) => {
                     <div className='form-control'>
                         <label htmlFor='price'>Price: </label>
                         <input
-                            type='text'
+                            type='number'
                             id='price'
                             name='price'
                             {...register("price", { required: true })}

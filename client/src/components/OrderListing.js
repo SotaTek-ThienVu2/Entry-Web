@@ -6,7 +6,7 @@ import OrderComponent from "./OrderComponent";
 import Modal from "./Modal";
 import useModal from './useModal';
 const OrderPage = () => {
-  const orders = useSelector((state) => state.allOrders.orders);
+  // const orders = useSelector((state) => state.allOrders.orders);
   const {isShowing, toggle} = useModal();
   const dispatch = useDispatch();
   const fetchOrders = async () => {
@@ -18,6 +18,10 @@ const OrderPage = () => {
 
   useEffect(() => {
     fetchOrders();
+    const interval = setInterval(() => {
+      fetchOrders();
+    }, process.env.REACT_APP_INTERVAL);
+    return () => clearInterval(interval);
   }, []);
 
   return (

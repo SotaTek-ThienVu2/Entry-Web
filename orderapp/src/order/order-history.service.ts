@@ -14,10 +14,11 @@ export class OrderHistoryService {
         return this.orderHistoryRepository.insert({
             status,
             orderNumber,
+            createTimestamp : new Date()
         });
     }
 
     async findByOrderNumber (orderNumber): Promise<OrderHistory[]> {
         return await this.orderHistoryRepository.find({orderNumber})
-      }
+    }
 }

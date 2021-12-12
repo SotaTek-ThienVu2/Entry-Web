@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { OrderHistoryService } from './order-history.service';
 import { catchError, tap } from 'rxjs/operators';
+import { createQueryBuilder } from 'typeorm';
 @Injectable()
 export class OrderService {
   constructor(
@@ -19,12 +20,20 @@ export class OrderService {
   ) {}
   /**Get all order */
   async findAll (): Promise<OrderEntity[]> {
-    return await this.orderRepo.find();
+    return await this.orderRepo.createQueryBuilder("order").orderBy("order.id", "DESC").getMany();
   }
   /**Get 1 by id */
   async findOne (id): Promise<OrderEntity> {
     return await this.orderRepo.findOne({id})
   }
+  // async searchByName (text): Promise<OrderEntity[]> {
+  //   return await this.orderRepo
+  //   .createQueryBuilder("order")
+  //   .where("order.name like :name", {name: '%' + text + '%' })
+  //   .orderBy("order.id", "DESC")
+  //   .setParameters({ name: text })
+  //   .getMany();
+  // }
   /**create order */
   async create(dto: CreateOrderDto): Promise<OrderEntity> {
     try {
@@ -36,6 +45,7 @@ export class OrderService {
       order.quantity = dto.quantity;
       order.category = dto.category;
       order.image = dto.image;
+      order.createTimestamp = new Date();
       order.orderNumber = this.makeid(8);
       order.id = (await this.orderRepo.insert(order)).generatedMaps[0].id;
       this.orderHistoryService.create(order.orderNumber, Status.CREATED);

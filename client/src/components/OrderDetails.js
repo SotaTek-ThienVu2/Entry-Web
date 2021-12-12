@@ -2,35 +2,34 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectedOrder, removeSelectedOrder } from "../redux/actions/ordersActions";
+import { selectedOrder, removeSelectedOrder , setOrderHistory} from "../redux/actions/ordersActions";
 const OrderDetails = () => {
   const { id } = useParams();
   let order = useSelector((state) => state.order);
-  const { image, name, price, category, description, orderNumber,address, status } = order;
+  let orderHistory = useSelector((state) => state.orderHistory);
+  const { image, name, price, category, description, orderNumber, address, status, quantity } = order;
   const dispatch = useDispatch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const formatDate = (dateString) => {
+    const options = {  year: 'numeric', month: 'long', day: '2-digit', hour: '2-digit', minute: '2-digit' }
+    return new Date(dateString).toLocaleDateString(undefined, options)
+  }
   const fetchOrderDetail = async (id) => {
     const response = await axios
       .get(`${process.env.REACT_APP_API_ENDPOINT}/orders/${id}`)
       .catch((err) => {});
-    dispatch(selectedOrder(response?.data));
+      dispatch(selectedOrder(response?.data));
   };
-
-  const [historyOrder, setHistoryOrder] = useState([]);
-  const fetchOrderDetailHistory = async (orderNumber) => {
+  const onCancel = async () => {
     const response = await axios
-      .get(`${process.env.REACT_APP_API_ENDPOINT}/orders/${orderNumber}/detail`)
+      .put(`${process.env.REACT_APP_API_ENDPOINT}/orders/${id}/cancel`)
       .catch((err) => {});
-    let newArr = response?.data.map(obj => {
-      let rObj = {};
-      rObj.historyStatus = obj.status;
-      rObj.historyTimeStamp = obj.createTimestamp;
-      return rObj;
-    })
-    historyOrder.push(newArr);
-    // console.log(historyOrder[0]);
+      if (response.data === 1) {
+        fetchOrderDetail(id);
+      }else{
+        fetchOrderDetail(id);
+        alert("Something was wrong")
+      }
   };
-
   useEffect(() => {
     if (id && id !== "") {
       fetchOrderDetail(id);
@@ -41,19 +40,26 @@ const OrderDetails = () => {
   }, [id]);
 
   useEffect(() => {
-    if (orderNumber && orderNumber !== "") {
+    if (orderNumber) {
+      const fetchOrderDetailHistory = async (orderNumber) => {
+        const response = await axios
+          .get(`${process.env.REACT_APP_API_ENDPOINT}/orders/${orderNumber}/detail`)
+          .catch((err) => {});
+          dispatch(setOrderHistory(response.data));
+      };
       fetchOrderDetailHistory(orderNumber);
     }
   }, [orderNumber]);
 
-  // const renderList = historyOrder[0].map((history) => {
-  //   const { historyStatus, historyTimeStamp } = history;
-  //   return (
-  //     <ul>
-  //       <li>{historyStatus} at {historyTimeStamp}</li>
-  //     </ul>
-  //   )
-  // });
+  const renderList = orderHistory?.orderHistory?.map((history) => {
+    const { id, status, createTimestamp } = history;
+    return (
+        <li className="li-custom" key={id}>
+          <span className="content-custom"> 
+            {status}
+          </span> at {formatDate(createTimestamp)}</li>
+    )
+  });
 
   return (
     <div className="ui column container">
@@ -67,22 +73,28 @@ const OrderDetails = () => {
               <div className="column lp">
                 <img className="ui fluid image" src={image} />
               </div>
-              <div className="column rp">
+              <div className="column rp order-detail-custom">
+                <h5>#{orderNumber}</h5>
                 <h1>{name}</h1>
-                <h2>
-                  <a className="ui teal tag label">${price}</a>
-                </h2>
-                <h3 className="ui brown block header">{category}</h3>
-                <p>{description}</p>
-                {/* status */}
+                <div style={{'display': 'flex', 'alignItems': 'center', 'justifyContent': 'space-between'}}>
+                <a className="ui teal tag label">${price}</a>
+                <div style={{'fontSize': '20px'}}>
+                  <strong>Quantity: </strong><a>{quantity}</a>
+                </div>
+                </div>
+                <h3 className="ui brown block header">Category: {category}</h3>
+                <p><strong>Description: </strong>{description}</p>
+                <p><strong>Address:</strong> {address}</p>
+                <ul style={{'marginBottom': '30px', 'lineHeight': '2rem'}}>
+                  {renderList}
+                </ul>
                 {(status === 'confirmed' || status === 'created') ? 
-                <div className="ui vertical animated button" tabIndex="0">
+                <div className="ui vertical animated button" tabIndex="0" onClick={onCancel}>
                   <div className="visible content">Cancel</div>
                 </div>: 
-                <div className="ui vertical button " tabIndex="0">
-                  <div className=" content">{status}</div>
+                <div style={{'cursor': 'not-allowed'}} className="ui vertical button " tabIndex="0">
+                  <div className="content-custom content">{status}</div>
                 </div>}
-                {/* {renderList} */}
               </div>
             </div>
           </div>

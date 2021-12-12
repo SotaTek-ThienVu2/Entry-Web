@@ -22,16 +22,13 @@ const OrderComponent = () => {
                   </div>
                   {(status === 'confirmed' || status === 'created') ? (
                   <div style={{'display': 'flex', 'flexDirection': 'column', 'alignItems': 'flex-end'}}>
-                  <div className="badge">
+                  <div className="badge badge-blue">
                     {status}
-                  </div>
-                  <div className="ui vertical animated button" tabIndex="0">
-                    <div className="visible content">Cancel</div>
                   </div>
                   </div>
                   ):
                   (
-                    <div className="badge">
+                    <div className="badge badge-red">
                     {status}
                   </div>
                   )}

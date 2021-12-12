@@ -7,6 +7,13 @@ export const setOrder = (orders) => {
   };
 };
 
+export const setOrderHistory = (orderHistory) => {
+  return {
+    type: 'SET_ORDER_HISTORY',
+    payload: orderHistory,
+  };
+};
+
 export const selectedOrder = (order) => {
   return {
     type: ActionTypes.SELECTED_ORDER,

@@ -55,7 +55,7 @@
   background: #fff;
 }
 .ui.column > .row > .column.lp {
-  padding: 20px 40px 20px 20px;
+  padding: 0 40px 20px 20px;
   align-self: flex-start !important;
 }
 .ui.column > .row > .column.rp {
@@ -130,4 +130,21 @@
   padding-right: 5px;
   margin-bottom: 2px;
   font-weight: bolder;
+}
+.badge-red{
+  color: #ff3e6c;
+}
+.badge-blue{
+  color: rgb(70, 70, 202);
+}
+.order-detail-custom h5{
+  margin: 5px 0;
+  color: #000;
+}
+.content-custom{
+  text-transform: uppercase;
+  margin-right: 2px;
+}
+.li-custom{
+  display: flex;
 }
