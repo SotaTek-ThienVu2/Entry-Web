@@ -11,7 +11,7 @@ const OrderPage = () => {
   const dispatch = useDispatch();
   const fetchOrders = async () => {
     const response = await axios
-      .get("http://localhost:3000/orders")
+      .get(`${process.env.REACT_APP_API_ENDPOINT}/orders`)
       .catch((err) => {});
     dispatch(setOrder(response.data));
   };

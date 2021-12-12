@@ -11,7 +11,7 @@ function App() {
       <Router>
         <Header />
         <Switch>
-          <Route path="/home" exact component={OrderListing} />
+          <Route path="/" exact component={OrderListing} />
           <Route path="/order/:id"  component={OrderDetails} />
           <Route>404 Not Found!</Route>
         </Switch>

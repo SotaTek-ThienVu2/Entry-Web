@@ -1,11 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectedOrder,
-  removeSelectedOrder,
-} from "../redux/actions/ordersActions";
+import { selectedOrder, removeSelectedOrder } from "../redux/actions/ordersActions";
 const OrderDetails = () => {
   const { id } = useParams();
   let order = useSelector((state) => state.order);
@@ -14,24 +11,50 @@ const OrderDetails = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchOrderDetail = async (id) => {
     const response = await axios
-      .get(`http://localhost:3000/orders/${id}`)
+      .get(`${process.env.REACT_APP_API_ENDPOINT}/orders/${id}`)
       .catch((err) => {});
     dispatch(selectedOrder(response?.data));
   };
 
-  // const fetchOrderDetail = async (id) => {
-  //   const response = await axios
-  //     .get(`http://localhost:3000/orders/${orderNumber}/detail`)
-  //     .catch((err) => {});
-  //   dispatch(selectedOrder(response?.data));
-  // };
+  const [historyOrder, setHistoryOrder] = useState([]);
+  const fetchOrderDetailHistory = async (orderNumber) => {
+    const response = await axios
+      .get(`${process.env.REACT_APP_API_ENDPOINT}/orders/${orderNumber}/detail`)
+      .catch((err) => {});
+    let newArr = response?.data.map(obj => {
+      let rObj = {};
+      rObj.historyStatus = obj.status;
+      rObj.historyTimeStamp = obj.createTimestamp;
+      return rObj;
+    })
+    historyOrder.push(newArr);
+    // console.log(historyOrder[0]);
+  };
 
   useEffect(() => {
-    if (id && id !== "") fetchOrderDetail(id);
+    if (id && id !== "") {
+      fetchOrderDetail(id);
+    }
     return () => {
       dispatch(removeSelectedOrder());
     };
   }, [id]);
+
+  useEffect(() => {
+    if (orderNumber && orderNumber !== "") {
+      fetchOrderDetailHistory(orderNumber);
+    }
+  }, [orderNumber]);
+
+  // const renderList = historyOrder[0].map((history) => {
+  //   const { historyStatus, historyTimeStamp } = history;
+  //   return (
+  //     <ul>
+  //       <li>{historyStatus} at {historyTimeStamp}</li>
+  //     </ul>
+  //   )
+  // });
+
   return (
     <div className="ui column container">
       {Object.keys(order).length === 0 ? (
@@ -51,9 +74,15 @@ const OrderDetails = () => {
                 </h2>
                 <h3 className="ui brown block header">{category}</h3>
                 <p>{description}</p>
+                {/* status */}
+                {(status === 'confirmed' || status === 'created') ? 
                 <div className="ui vertical animated button" tabIndex="0">
                   <div className="visible content">Cancel</div>
-                </div>
+                </div>: 
+                <div className="ui vertical button " tabIndex="0">
+                  <div className=" content">{status}</div>
+                </div>}
+                {/* {renderList} */}
               </div>
             </div>
           </div>

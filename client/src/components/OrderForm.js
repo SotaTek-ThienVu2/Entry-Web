@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { useHistory } from "react-router-dom"
 import './Form.css'
 import { useForm } from "react-hook-form"
 const OrderForm = ({hide}) => {
     const { register, handleSubmit, formState: { errors } } = useForm()
-    const history = useHistory() 
     const onSubmit = (data) => {
+        console.log(data);
         hide()
     }
     return (
@@ -18,23 +17,23 @@ const OrderForm = ({hide}) => {
                             type='text'
                             id='name'
                             name='name'
-                            {...register("name", { required: true, minLength: 6 })}
+                            {...register("name", { required: true})}
                         />
                         {Object.keys(errors).length !== 0 && (<ul className="error">
-                            {errors.name?.type === 'required' && <li>name is required!</li>}
+                            {errors.name?.type === 'required' && <li>Product name is required!</li>}
                         </ul>)
                         }
                     </div>
                     <div className='form-control'>
                         <label htmlFor='price'>Price: </label>
                         <input
-                            type='textarea'
+                            type='text'
                             id='price'
                             name='price'
                             {...register("price", { required: true })}
                         />
                         {Object.keys(errors).length !== 0 && (<ul className="error">
-                            {errors.price?.type === 'required' && <li>price is required!</li>}
+                            {errors.price?.type === 'required' && <li>Price is required!</li>}
                         </ul>)
                         }
                     </div>
@@ -47,7 +46,7 @@ const OrderForm = ({hide}) => {
                         />
                         {Object.keys(errors).length !== 0 &&
                             (<ul className="error">
-                                {errors.address?.type === 'required' && <li>address is required!</li>}
+                                {errors.address?.type === 'required' && <li>Address is required!</li>}
                             </ul>)
                         }
                     </div>
@@ -56,14 +55,8 @@ const OrderForm = ({hide}) => {
                         <input type="url"
                             name="image"
                             id="image"
-                            {...register("image", { required: true })}
+                            {...register("image")}
                             placeholder='Product image url...' />
-                        {Object.keys(errors).length !== 0 &&
-                            (<ul className="error">
-                                {errors.image?.type === 'required' && <li>image is required!</li>}
-
-                            </ul>)
-                        }
                     </div>
                 </div>
                 <div className="col-6">
@@ -73,15 +66,8 @@ const OrderForm = ({hide}) => {
                             type='text'
                             id='category'
                             name='category'
-                            {...register("category", { required: true })}
+                            {...register("category")}
                         />
-                        {Object.keys(errors).length !== 0 &&
-                            (<ul className="error">
-                                {errors.category?.type === 'required' && <li>category is required!</li>}
-
-                            </ul>)
-                        }
-
                     </div>
                     <div className='form-control'>
                         <label htmlFor='quantity'>Quantity: </label>
@@ -93,7 +79,7 @@ const OrderForm = ({hide}) => {
                         />
                         {Object.keys(errors).length !== 0 &&
                             (<ul className="error">
-                                {errors.quantity?.type === 'required' && <li>quantity is required!</li>}
+                                {errors.quantity?.type === 'required' && <li>Quantity is required!</li>}
                             </ul>)}
 
                     </div>
@@ -102,12 +88,8 @@ const OrderForm = ({hide}) => {
                         <textarea
                             id='description'
                             name='description'
-                            {...register("description", { required: true })}
+                            {...register("description")}
                         />
-                        {Object.keys(errors).length !== 0 &&
-                            (<ul className="error">
-                                {errors.description?.type === 'required' && <li> description is required!</li>}
-                            </ul>)}
                     </div>
                 </div>
             </div>
