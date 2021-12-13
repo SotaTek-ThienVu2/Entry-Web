@@ -1,10 +1,8 @@
-version: '2'
+version: '3'
 services:
   order:
-    build:
-      context: .
-      dockerfile: ../orderapp/Dockerfile
-    command: npm run start
+    build: ./orderapp
+    # command: npm run start
     volumes:
       - .:/usr/app/order
       - .:/usr/src/app/order/node_modules
@@ -20,17 +18,15 @@ services:
     external_links:
       - payments_web_1:payments.local
   payment:
-    build: 
-      context: .
-      dockerfile: ../paymentapp/Dockerfile
-    command: npm run start
+    build: ./paymentapp
+    # command: npm run start
     volumes:
       - .:/usr/app/payment
       - .:/usr/src/app/payment/node_modules
     ports:
       - "8002:8002"
-    depends_on:
-      - mariadb
+    # depends_on:
+    #   - mariadb
     environment:
       DATABASE_URL: mariadb://'dev'@'%'/payment
     networks:
