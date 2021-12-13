@@ -1,0 +1,30 @@
+version: '2'
+services:
+  payment:
+    build: .
+    command: npm run start
+    volumes:
+      - .:/usr/app/
+      - .:/usr/src/app/node_modules
+    ports:
+      - "8002:8002"
+    # depends_on:
+    #   - database
+    environment:
+      DATABASE_URL: database://'dev'@'%'/payment
+  # database:
+  #   image: mariadb:10.7.1
+  #   restart: on-failure
+  #   ports:
+  #     - '33061:33061'
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: 12345678@Abc
+  #     MYSQL_ROOT_HOST: '%'
+  #     MYSQL_DATABASE: payment
+  #     MYSQL_USER: dev
+  #     MYSQL_PASSWORD: 123456
+  #   volumes:
+  #     - mariadb_data:/var/lib/mysql
+volumes:
+  mariadb_data:
+  #   driver: local

@@ -1,0 +1,56 @@
+version: '2'
+services:
+  order:
+    build:
+      context: .
+      dockerfile: ../orderapp/Dockerfile
+    command: npm run start
+    volumes:
+      - .:/usr/app/order
+      - .:/usr/src/app/order/node_modules
+    ports:
+      - "8001:8001"
+    depends_on:
+      - mariadb
+    environment:
+      DATABASE_URL: mariadb://'dev'@'%'/order
+    networks:
+      - default
+      - payments_default
+    external_links:
+      - payments_web_1:payments.local
+  payment:
+    build: 
+      context: .
+      dockerfile: ../paymentapp/Dockerfile
+    command: npm run start
+    volumes:
+      - .:/usr/app/payment
+      - .:/usr/src/app/payment/node_modules
+    ports:
+      - "8002:8002"
+    depends_on:
+      - mariadb
+    environment:
+      DATABASE_URL: mariadb://'dev'@'%'/payment
+    networks:
+      - default
+  mariadb:
+    image: mariadb:10.2
+    restart: on-failure
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345678@Abc
+      MYSQL_ROOT_HOST: '%'
+      # MYSQL_DATABASE: order
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: 123456
+    volumes:
+      - mariadb_data:/var/lib/mysql
+volumes:
+  mariadb_data:
+    driver: local
+networks:
+  payments_default:
+    # external: true
