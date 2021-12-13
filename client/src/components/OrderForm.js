@@ -1,18 +1,17 @@
-import axios from "axios";
-import React, { useState } from 'react'
-import './Form.css'
+import { post } from '../api/ApiService'
+import ConstantsList from '../common/Constant'
+import React from 'react'
+import '../assets/css/Form.css'
 import { useForm } from "react-hook-form"
 const OrderForm = ({hide}) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const createOrder = async (data) => {
-        const response = await axios
-        .post(`${process.env.REACT_APP_API_ENDPOINT}/orders`, data)
-        .catch((err) => {});
-        if(!!response.data){
-            alert("Created order success !!!")
+        const response = await post('orders', data)
+        if(!!response){
+            alert(ConstantsList.SUCCESS)
         }
         else{
-            alert("Something was wrong, try again !!!")
+            alert(ConstantsList.ERROR)
         }
     };
     const onSubmit = (data) => {

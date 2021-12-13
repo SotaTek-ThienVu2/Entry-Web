@@ -26,14 +26,6 @@ export class OrderService {
   async findOne (id): Promise<OrderEntity> {
     return await this.orderRepo.findOne({id})
   }
-  // async searchByName (text): Promise<OrderEntity[]> {
-  //   return await this.orderRepo
-  //   .createQueryBuilder("order")
-  //   .where("order.name like :name", {name: '%' + text + '%' })
-  //   .orderBy("order.id", "DESC")
-  //   .setParameters({ name: text })
-  //   .getMany();
-  // }
   /**create order */
   async create(dto: CreateOrderDto): Promise<OrderEntity> {
     try {

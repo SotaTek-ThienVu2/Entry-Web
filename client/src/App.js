@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import OrderListing from "./components/OrderListing";
 import Header from "./components/Header";
-import "./App.css";
+import "./assets/css/App.css";
 import OrderDetails from "./components/OrderDetails";
 
 function App() {

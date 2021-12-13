@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './Modal.css';
+import '../assets/css/Modal.css';
 import OrderForm from './OrderForm';
 const Modal = ({ isShowing, hide }) => isShowing ? ReactDOM.createPortal(
     <React.Fragment>

@@ -5,7 +5,7 @@ const Header = () => {
     <div className="ui fixed menu">
       <div className="ui container center">
         <img src="/sotatek.png" alt="sotatek" className="logo" />
-        <h2>Orders List</h2>
+        <h2>Setel Entry Test</h2>
       </div>
     </div>
   );

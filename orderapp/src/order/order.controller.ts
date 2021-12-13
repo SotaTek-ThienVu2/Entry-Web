@@ -4,7 +4,6 @@ import { OrderHistoryService } from './order-history.service';
 import { OrderEntity } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiCreatedResponse, ApiOkResponse, ApiParam, ApiBody, ApiOperation, ApiForbiddenResponse } from '@nestjs/swagger';
-import { string } from 'joi';
 @Controller('orders')
 export class OrderController {
   constructor(
@@ -20,14 +19,6 @@ export class OrderController {
   findAll(): Promise<OrderEntity[]> {
     return this.orderService.findAll()
   }
-
-  // @Get('search/:text')
-  // @ApiOperation({ summary: 'Get all order' })
-  // @ApiOkResponse()
-  // @ApiParam({name: 'text', required: true})
-  // searchByName(@Param('orderNumber') text): Promise<OrderEntity[]> {
-  //   return this.orderService.searchByName(text)
-  // }
   /**
    * get order by order number
    * @param id 
@@ -90,5 +81,4 @@ export class OrderController {
     let confirmResult = await this.orderService.confirm(id);
     return confirmResult.affected;
   }
-
 }

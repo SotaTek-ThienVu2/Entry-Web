@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { selectedOrder, removeSelectedOrder , setOrderHistory} from "../redux/actions/ordersActions";
+import React, { useEffect } from "react"
+import ConstantsList from '../common/Constant'
+import { get, put } from '../api/ApiService'
+import { useParams } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { selectedOrder, removeSelectedOrder , setOrderHistory} from "../redux/actions/ordersActions"
 const OrderDetails = () => {
   const { id } = useParams();
   let order = useSelector((state) => state.order);
@@ -14,20 +15,16 @@ const OrderDetails = () => {
     return new Date(dateString).toLocaleDateString(undefined, options)
   }
   const fetchOrderDetail = async (id) => {
-    const response = await axios
-      .get(`${process.env.REACT_APP_API_ENDPOINT}/orders/${id}`)
-      .catch((err) => {});
-      dispatch(selectedOrder(response?.data));
+    const response = await get(`orders/${id}`)
+      dispatch(selectedOrder(response));
   };
   const onCancel = async () => {
-    const response = await axios
-      .put(`${process.env.REACT_APP_API_ENDPOINT}/orders/${id}/cancel`)
-      .catch((err) => {});
-      if (response.data === 1) {
+    const response = await put(`orders/${id}/cancel`)
+      if (response === 1) {
         fetchOrderDetail(id);
       }else{
         fetchOrderDetail(id);
-        alert("Something was wrong")
+        alert(ConstantsList.ERROR)
       }
   };
   useEffect(() => {
@@ -42,10 +39,8 @@ const OrderDetails = () => {
   useEffect(() => {
     if (orderNumber) {
       const fetchOrderDetailHistory = async (orderNumber) => {
-        const response = await axios
-          .get(`${process.env.REACT_APP_API_ENDPOINT}/orders/${orderNumber}/detail`)
-          .catch((err) => {});
-          dispatch(setOrderHistory(response.data));
+        const response = await get(`orders/${orderNumber}/detail`);
+          dispatch(setOrderHistory(response));
       };
       fetchOrderDetailHistory(orderNumber);
     }
