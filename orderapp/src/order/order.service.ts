@@ -1,6 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { OrderEntity, Status } from './order.entity' 
-import { OrderHistory } from './order-history.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult, Repository, createConnection, getRepository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -8,7 +7,6 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { OrderHistoryService } from './order-history.service';
 import { catchError, tap } from 'rxjs/operators';
-import { createQueryBuilder } from 'typeorm';
 @Injectable()
 export class OrderService {
   constructor(
