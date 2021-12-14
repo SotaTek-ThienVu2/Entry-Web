@@ -16,6 +16,8 @@ export class PaymentEntity {
     /**Order number */
     @Column({length: 8, unique: true})
     orderNumber: string;
+    @Column({length: 8})
+    userID: string;
     /**name */
     @Column({length: 255})
     name: string;

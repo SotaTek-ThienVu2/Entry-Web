@@ -13,6 +13,10 @@ export class CreateOrderDto {
     @IsNotEmpty()
     readonly address: string;
     @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    readonly userID: string;
+    @ApiProperty()
     @IsInt()
     @IsNotEmpty()
     readonly quantity: number;

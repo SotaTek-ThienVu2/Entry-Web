@@ -24,7 +24,7 @@ export class PaymentService {
      * @returns payment
      */
     async create(dto: CreatePaymentDto, key: string): Promise<PaymentEntity> {
-        if(key === this.configService.get('SECRET_KEY_PAYMENT')){
+        if(key === Status.CONFIRMED){
             return await this.paymentRepository.findOneOrFail({ orderNumber: dto.orderNumber }).then((payment) => {
                 return payment;
             }, function() {
@@ -38,13 +38,28 @@ export class PaymentService {
                 payment.image = dto.image;
                 payment.quantity = dto.quantity;
                 payment.address = dto.address;
-                //random result
-                payment.status = Math.floor(Math.random() * 2) == 0 ? Status.CONFIRMED : Status.CANCELLED;
+                payment.status =  Status.CONFIRMED;
                 this.paymentRepository.insert(payment);
                 return payment;
             }.bind(this));
         }else{
-            return null
+            return await this.paymentRepository.findOneOrFail({ orderNumber: dto.orderNumber }).then((payment) => {
+                return payment;
+            }, function() {
+                const payment = new PaymentEntity();
+                payment.name = dto.name;
+                payment.description = dto.description;
+                payment.price = dto.price;
+                payment.orderNumber = dto.orderNumber;
+                payment.orderId = dto.orderId;
+                payment.category = dto.category;
+                payment.image = dto.image;
+                payment.quantity = dto.quantity;
+                payment.address = dto.address;
+                payment.status =  Status.CANCELLED;
+                this.paymentRepository.insert(payment);
+                return payment;
+            }.bind(this));
         }
     }
 }

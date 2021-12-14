@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe,HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe,HttpStatus, Headers } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderHistoryService } from './order-history.service';
 import { OrderEntity } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiParam, ApiBody, ApiOperation, ApiForbiddenResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiBody, ApiOperation } from '@nestjs/swagger';
 @Controller('orders')
 export class OrderController {
   constructor(
@@ -16,8 +16,8 @@ export class OrderController {
   @Get()
   @ApiOperation({ summary: 'Get all order' })
   @ApiOkResponse()
-  findAll(): Promise<OrderEntity[]> {
-    return this.orderService.findAll()
+  findAll(@Headers('userID') userID: string): Promise<OrderEntity[]> {
+    return this.orderService.findAll(userID)
   }
   /**
    * get order by order number
@@ -35,7 +35,7 @@ export class OrderController {
    * @param orderNumber 
    * @returns order
    */
-  @Get(':orderNumber/detail')
+  @Get(':orderNumber/history')
   @ApiOperation({ summary: 'Get order detail by orderNumber' })
   @ApiParam({name: 'orderNumber', required: true})
   findDetail(@Param('orderNumber') orderNumber) {
@@ -49,11 +49,11 @@ export class OrderController {
   @Post()
   @ApiOperation({ summary: 'Create order' })
   @ApiBody({ type: CreateOrderDto, required: true, })
-  async create(@Body() dto: CreateOrderDto) {
-    const order = await this.orderService.create(dto);
+  async create(@Headers('userID') userID: string, @Body() dto: CreateOrderDto) {
+    const order = await this.orderService.create(dto, userID);
     
     if(!!order){
-      this.orderService.pay(order);
+      this.orderService.pay(order, userID);
     }
     return order;
   }
