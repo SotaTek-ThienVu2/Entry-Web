@@ -35,12 +35,12 @@ export class OrderController {
    * @param orderNumber 
    * @returns order
    */
-   @Get(':orderNumber/detail')
-   @ApiOperation({ summary: 'Get order detail by orderNumber' })
-   @ApiParam({name: 'orderNumber', required: true})
-   findDetail(@Param('orderNumber') orderNumber) {
-     return this.orderHistoryService.findByOrderNumber(orderNumber);
-   }
+  @Get(':orderNumber/detail')
+  @ApiOperation({ summary: 'Get order detail by orderNumber' })
+  @ApiParam({name: 'orderNumber', required: true})
+  findDetail(@Param('orderNumber') orderNumber) {
+    return this.orderHistoryService.findByOrderNumber(orderNumber);
+  }
   /**
    * create order
    * @param dto CreateOrderDto
