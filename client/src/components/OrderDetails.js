@@ -41,7 +41,7 @@ const OrderDetails = () => {
   useEffect(() => {
     if (orderNumber) {
       const fetchOrderDetailHistory = async (orderNumber) => {
-        const response = await get(`orders/${orderNumber}/detail`);
+        const response = await get(`orders/${orderNumber}/history`);
           dispatch(setOrderHistory(response));
       };
       fetchOrderDetailHistory(orderNumber);
@@ -65,7 +65,6 @@ const OrderDetails = () => {
       ) : (
         <div className="ui placeholder segment">
           <div className="ui two column stackable center aligned grid">
-          <button onClick={()=>history.replace('/')}>HOME</button>
             <div className="ui vertical divider">AND</div>
             <div className="middle aligned row">
               <div className="column lp">
@@ -86,13 +85,22 @@ const OrderDetails = () => {
                 <ul style={{'marginBottom': '30px', 'lineHeight': '2rem'}}>
                   {renderList}
                 </ul>
-                {(status === 'confirmed' || status === 'created') ? 
-                <div className="ui vertical animated button" tabIndex="0" onClick={onCancel}>
-                  <div className="visible content">Cancel</div>
-                </div>: 
-                <div style={{'cursor': 'not-allowed'}} className="ui vertical button " tabIndex="0">
-                  <div className="content-custom content">{status}</div>
-                </div>}
+                <div className="ui grid">
+                  <div className="eight wide column">
+                  {(status === 'confirmed' || status === 'created') ? 
+                  <div className="ui vertical animated button" tabIndex="0" onClick={onCancel}>
+                    <div className="visible content">Cancel</div>
+                  </div>: 
+                  <div style={{'cursor': 'not-allowed'}} className="ui vertical button " tabIndex="0">
+                    <div className="content-custom content">{status}</div>
+                  </div>}
+                  </div>
+                  <div className="eight wide column">
+                  <div className="ui vertical animated button" tabIndex="0" onClick={()=>history.replace('/')}>
+                    <div className="visible content" >HOME</div>
+                  </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

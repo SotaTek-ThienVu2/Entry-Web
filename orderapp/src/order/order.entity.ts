@@ -15,6 +15,9 @@ export class OrderEntity {
     /**order Number */
     @Column({length: 8, unique: true})
     orderNumber: string;
+    /**order Number */
+    @Column({length: 8})
+    userID: string;
     /**name of produtc */
     @Column({length: 255})
     name: string;

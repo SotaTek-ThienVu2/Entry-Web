@@ -1,6 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { OrderEntity, Status } from './order.entity' 
-import { OrderHistory } from './order-history.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult, Repository, createConnection, getRepository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -8,7 +7,6 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { OrderHistoryService } from './order-history.service';
 import { catchError, tap } from 'rxjs/operators';
-import { createQueryBuilder } from 'typeorm';
 @Injectable()
 export class OrderService {
   constructor(
@@ -19,15 +17,20 @@ export class OrderService {
     private readonly orderHistoryService: OrderHistoryService,
   ) {}
   /**Get all order */
-  async findAll (): Promise<OrderEntity[]> {
-    return await this.orderRepo.createQueryBuilder("order").orderBy("order.id", "DESC").getMany();
+  async findAll (userID :string): Promise<OrderEntity[]> {
+    return await this.orderRepo.
+    createQueryBuilder("order")
+    .where("order.userID = :userID")
+    .orderBy("order.id", "DESC")
+    .setParameters({  userID: userID })
+    .getMany();
   }
   /**Get 1 by id */
   async findOne (id): Promise<OrderEntity> {
     return await this.orderRepo.findOne({id})
   }
   /**create order */
-  async create(dto: CreateOrderDto): Promise<OrderEntity> {
+  async create(dto: CreateOrderDto, userID: string): Promise<OrderEntity> {
     try {
       const order = new OrderEntity();
       order.name = dto.name;
@@ -37,6 +40,7 @@ export class OrderService {
       order.quantity = dto.quantity;
       order.category = dto.category;
       order.image = dto.image;
+      order.userID = userID;
       order.createTimestamp = new Date();
       order.orderNumber = this.makeid(8);
       order.id = (await this.orderRepo.insert(order)).generatedMaps[0].id;
@@ -102,11 +106,11 @@ export class OrderService {
     return result;
   }
   /**call payment and handle */
-  pay(order: OrderEntity) {
+  pay(order: OrderEntity, userID: string) {
     const delayTime = this.configService.get('X_SECOND');
     const paymentUrl = this.configService.get('PAYMENT_URL');
     const headersRequest = {
-        'Secret-key': this.configService.get('SECRET_KEY_ORDER'),
+        'Secret-key': Math.floor(Math.random() * 2) == 0 ? Status.CONFIRMED : Status.CANCELLED,
     };
     const self = this;
     const data = {
@@ -118,7 +122,8 @@ export class OrderService {
         address: order.address,
         quantity: order.quantity,
         image: order.image,
-        category: order.category
+        category: order.category,
+        userID: userID
     };
     this.httpService.post(paymentUrl , data, { headers: headersRequest })
     .pipe(
