@@ -8,13 +8,13 @@ services:
       - .:/usr/src/app/order/node_modules
     ports:
       - "8001:8001"
-    depends_on:
-      - mariadb
+    # depends_on:
+    #   - mariadb
     environment:
       DATABASE_URL: mariadb://'dev'@'%'/order
-    networks:
-      - default
-      - payments_default
+    # networks:
+    #   - default
+    #   - payments_default
     external_links:
       - payments_web_1:payments.local
   payment:
@@ -29,8 +29,8 @@ services:
     #   - mariadb
     environment:
       DATABASE_URL: mariadb://'dev'@'%'/payment
-    networks:
-      - default
+    # networks:
+    #   - default
   mariadb:
     image: mariadb:10.2
     restart: on-failure
