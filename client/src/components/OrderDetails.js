@@ -4,10 +4,12 @@ import { get, put } from '../api/ApiService'
 import { useParams } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { selectedOrder, removeSelectedOrder , setOrderHistory} from "../redux/actions/ordersActions"
+import { useHistory } from "react-router"
 const OrderDetails = () => {
   const { id } = useParams();
   let order = useSelector((state) => state.order);
   let orderHistory = useSelector((state) => state.orderHistory);
+  const history = useHistory();
   const { image, name, price, category, description, orderNumber, address, status, quantity } = order;
   const dispatch = useDispatch();
   const formatDate = (dateString) => {
@@ -63,6 +65,7 @@ const OrderDetails = () => {
       ) : (
         <div className="ui placeholder segment">
           <div className="ui two column stackable center aligned grid">
+          <button onClick={()=>history.replace('/')}>HOME</button>
             <div className="ui vertical divider">AND</div>
             <div className="middle aligned row">
               <div className="column lp">
