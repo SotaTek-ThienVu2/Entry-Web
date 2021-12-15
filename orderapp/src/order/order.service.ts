@@ -1,4 +1,4 @@
-import { Injectable, HttpException } from '@nestjs/common';
+import { Injectable, HttpException, NotFoundException } from '@nestjs/common';
 import { Order } from './order.entity' 
 import { Status } from '../common/enum/Status';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,7 +28,11 @@ export class OrderService {
   }
   /**Get 1 by id */
   async findOne (id): Promise<Order> {
-    return await this.orderRepo.findOne({id})
+    const order = await this.orderRepo.findOne({id})
+    if (!order) {
+      throw new NotFoundException();
+    }
+    return order;
   }
   /**create order */
   async create(dto: CreateOrderDto, userID: string): Promise<Order> {
