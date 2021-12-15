@@ -1,5 +1,6 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { OrderEntity, Status } from './order.entity' 
+import { Order } from './order.entity' 
+import { Status } from 'src/common/enum/Status';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult, Repository, createConnection, getRepository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -10,14 +11,14 @@ import { catchError, tap } from 'rxjs/operators';
 @Injectable()
 export class OrderService {
   constructor(
-    @InjectRepository(OrderEntity)
-    private readonly orderRepo: Repository<OrderEntity>,
+    @InjectRepository(Order)
+    private readonly orderRepo: Repository<Order>,
     private configService: ConfigService,
     private httpService: HttpService,
     private readonly orderHistoryService: OrderHistoryService,
   ) {}
   /**Get all order */
-  async findAll (userID :string): Promise<OrderEntity[]> {
+  async findAll (userID :string): Promise<Order[]> {
     return await this.orderRepo.
     createQueryBuilder("order")
     .where("order.userID = :userID")
@@ -26,13 +27,13 @@ export class OrderService {
     .getMany();
   }
   /**Get 1 by id */
-  async findOne (id): Promise<OrderEntity> {
+  async findOne (id): Promise<Order> {
     return await this.orderRepo.findOne({id})
   }
   /**create order */
-  async create(dto: CreateOrderDto, userID: string): Promise<OrderEntity> {
+  async create(dto: CreateOrderDto, userID: string): Promise<Order> {
     try {
-      const order = new OrderEntity();
+      const order = new Order();
       order.name = dto.name;
       order.description = dto.description;
       order.price = dto.price;
@@ -51,40 +52,35 @@ export class OrderService {
     }
   }
   /**update */
-  async update(order: OrderEntity): Promise<UpdateResult> {
-    return await this.orderRepo.update(order.id, order);
+  async update(order: Order): Promise<Order> {
+    await this.orderRepo.update(order.id, order);
+    return this.orderRepo.findOne(order.id)
   }
   /**cancel order
    * @param id 
    */
-  async cancel(id: number): Promise<UpdateResult> {
+  async cancel(id: number): Promise<Order> {
     let order = await this.orderRepo.findOne({id});
     this.orderHistoryService.create(order.orderNumber, Status.CANCELLED);
     if(order.status === Status.CREATED || order.status === Status.CONFIRMED){
-      return this.orderRepo.update(
+      await this.orderRepo.update(
           { id },
           { status: Status.CANCELLED, updateTimestamp: new Date() },
       );
-    }else{
-      let rs = new UpdateResult;
-      rs.affected = 0;
-      return rs;
     }
+    return this.orderRepo.findOne({id})
   }
   /**confirm order */
-  async confirm(id: number): Promise<UpdateResult> {
+  async confirm(id: number): Promise<Order> {
     let order = await this.orderRepo.findOne({id});
     this.orderHistoryService.create(order.orderNumber, Status.CONFIRMED);
     if (order.status === Status.CREATED) {
-      return this.orderRepo.update(
+      await this.orderRepo.update(
           { id },
           { status: Status.CONFIRMED, updateTimestamp: new Date() },
       );
-    }else{
-      let rs = new UpdateResult;
-      rs.affected = 0;
-      return rs;
     }
+    return this.orderRepo.findOne({id})
   }
   /**
    * delete (may be use)
@@ -106,7 +102,7 @@ export class OrderService {
     return result;
   }
   /**call payment and handle */
-  pay(order: OrderEntity, userID: string) {
+  pay(order: Order, userID: string) {
     const delayTime = this.configService.get('X_SECOND');
     const paymentUrl = this.configService.get('PAYMENT_URL');
     const headersRequest = {

@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import {  Status } from './order.entity' 
+import { Status } from 'src/common/enum/Status';
 
 @Entity()
 export class OrderHistory {

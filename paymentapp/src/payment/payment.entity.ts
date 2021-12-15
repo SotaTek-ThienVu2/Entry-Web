@@ -1,12 +1,7 @@
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-
-export enum Status {
-    CONFIRMED = 'confirmed',
-    CANCELLED = 'cancelled',
-}
-
+import { Status } from 'src/common/Status';
 @Entity()
-export class PaymentEntity {
+export class Payment {
     /**ID */
     @PrimaryGeneratedColumn()
     id: number;

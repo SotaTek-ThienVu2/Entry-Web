@@ -3,7 +3,7 @@ import { OrderService } from './order.service';
 import {OrderHistoryService} from './order-history.service';
 import { OrderController } from './order.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { OrderEntity } from './order.entity';
+import { Order } from './order.entity';
 import {OrderHistory} from './order-history.entity';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
@@ -13,7 +13,7 @@ import { ConfigService } from '@nestjs/config';
   providers: [OrderService, OrderHistoryService],
   controllers: [OrderController],
   imports: [
-    TypeOrmModule.forFeature([OrderEntity, OrderHistory]),
+    TypeOrmModule.forFeature([Order, OrderHistory]),
     HttpModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

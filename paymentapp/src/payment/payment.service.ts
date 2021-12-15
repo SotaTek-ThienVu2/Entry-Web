@@ -1,21 +1,22 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
-import { PaymentEntity, Status } from './payment.entity';
+import { Payment } from './payment.entity';
+import { Status } from 'src/common/Status';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class PaymentService {
     constructor(
-        @InjectRepository(PaymentEntity)
-        private readonly paymentRepository: Repository<PaymentEntity>,
+        @InjectRepository(Payment)
+        private readonly paymentRepository: Repository<Payment>,
         private configService: ConfigService,
     ) {}
     /**
      * 
      * @returns all payment
      */
-    async findAll(): Promise<PaymentEntity[]> {
+    async findAll(): Promise<Payment[]> {
         return await this.paymentRepository.find();
     }
     /**
@@ -23,12 +24,12 @@ export class PaymentService {
      * @param dto paymentdto
      * @returns payment
      */
-    async create(dto: CreatePaymentDto, key: string): Promise<PaymentEntity> {
+    async create(dto: CreatePaymentDto, key: string): Promise<Payment> {
         if(key === Status.CONFIRMED){
             return await this.paymentRepository.findOneOrFail({ orderNumber: dto.orderNumber }).then((payment) => {
                 return payment;
             }, function() {
-                const payment = new PaymentEntity();
+                const payment = new Payment();
                 payment.name = dto.name;
                 payment.description = dto.description;
                 payment.price = dto.price;
@@ -46,7 +47,7 @@ export class PaymentService {
             return await this.paymentRepository.findOneOrFail({ orderNumber: dto.orderNumber }).then((payment) => {
                 return payment;
             }, function() {
-                const payment = new PaymentEntity();
+                const payment = new Payment();
                 payment.name = dto.name;
                 payment.description = dto.description;
                 payment.price = dto.price;

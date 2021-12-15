@@ -1,14 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-
-export enum Status {
-    CREATED = 'created',
-    CONFIRMED = 'confirmed',
-    CANCELLED = 'cancelled',
-    DELIVERED = 'delivered',
-}
-
+import { Status } from 'src/common/enum/Status';
 @Entity()
-export class OrderEntity {
+export class Order {
     /**ID */
     @PrimaryGeneratedColumn()
     id: number;

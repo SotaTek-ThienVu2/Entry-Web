@@ -1,7 +1,7 @@
-import { Controller, Body, Param, Get, Post, Put, Headers } from '@nestjs/common';
+import { Controller, Body, Get, Post, Headers } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { ApiCreatedResponse, ApiOkResponse, ApiForbiddenResponse, ApiBody, ApiOperation } from '@nestjs/swagger';
+import {  ApiOkResponse, ApiBody, ApiOperation } from '@nestjs/swagger';
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}

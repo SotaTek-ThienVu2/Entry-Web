@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe,HttpStatus, Headers } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderHistoryService } from './order-history.service';
-import { OrderEntity } from './order.entity';
+import { Order } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiOkResponse, ApiParam, ApiBody, ApiOperation } from '@nestjs/swagger';
 @Controller('orders')
@@ -16,7 +16,7 @@ export class OrderController {
   @Get()
   @ApiOperation({ summary: 'Get all order' })
   @ApiOkResponse()
-  findAll(@Headers('userID') userID: string): Promise<OrderEntity[]> {
+  findAll(@Headers('userID') userID: string): Promise<Order[]> {
     return this.orderService.findAll(userID)
   }
   /**
@@ -66,8 +66,7 @@ export class OrderController {
   @ApiOperation({ summary: 'Cancel order' })
   @ApiParam({name: 'id', required: true})
   async cancel(@Param('id',new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id) {
-    let cancelResult = await  this.orderService.cancel(id);
-    return cancelResult.affected;
+    return await this.orderService.cancel(id);;
   }
   /**
    * confirm order
@@ -78,7 +77,6 @@ export class OrderController {
   @ApiOperation({ summary: 'Confirm order' })
   @ApiParam({name: 'id', required: true})
   async confirm(@Param('id',new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })) id) {
-    let confirmResult = await this.orderService.confirm(id);
-    return confirmResult.affected;
+    return await this.orderService.confirm(id);
   }
 }
