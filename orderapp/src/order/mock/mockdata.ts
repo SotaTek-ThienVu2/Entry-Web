@@ -12,8 +12,8 @@ export const OrderMockData = {
   price: 25000,
   quantity: 15,
   status: Status.DELIVERED,
-  createTimestamp: new Date(),
-  updateTimestamp: new Date(),
+  createTimestamp: "2021-12-15T10:01:01.000Z",
+  updateTimestamp: "2021-12-15T10:11:54.000Z"
 };
 
 export const OrderListMockData = [
@@ -29,8 +29,8 @@ export const OrderListMockData = [
     price: 25000,
     quantity: 15,
     status: Status.CANCELLED,
-    createTimestamp: new Date(),
-    updateTimestamp: new Date(),
+    createTimestamp: "2021-12-15T10:01:01.000Z",
+    updateTimestamp: "2021-12-15T10:01:01.000Z",
   },
   {
     id: 8,
@@ -44,8 +44,8 @@ export const OrderListMockData = [
     price: 110,
     quantity: 1,
     status: Status.CANCELLED,
-    createTimestamp: new Date(),
-    updateTimestamp: new Date(),
+    createTimestamp: "2021-12-15T10:01:01.000Z",
+    updateTimestamp: "2021-12-15T10:01:01.000Z",
   },
   {
     id: 7,
@@ -59,8 +59,8 @@ export const OrderListMockData = [
     price: 110,
     quantity: 1,
     status: Status.CANCELLED,
-    createTimestamp: new Date(),
-    updateTimestamp: new Date(),
+    createTimestamp: "2021-12-15T10:01:01.000Z",
+    updateTimestamp: "2021-12-15T10:01:01.000Z",
   },
 ];
 
@@ -72,5 +72,4 @@ export const CreateOrderMockDto : CreateOrderDto = {
     description: "Hàng dởm",
     category: "thời trang nam",
     image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-    userID : "12"
 };

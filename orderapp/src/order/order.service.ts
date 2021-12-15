@@ -17,10 +17,10 @@ export class OrderService {
     @InjectRepository(Order)
     private readonly orderRepo: Repository<Order>,
   ) {}
-  /**Get all order */
+  /**Get all order by userID*/
   async findAll (userID :string): Promise<Order[]> {
-    return await this.orderRepo.
-    createQueryBuilder("order")
+    return await this.orderRepo
+    .createQueryBuilder("order")
     .where("order.userID = :userID")
     .orderBy("order.id", "DESC")
     .setParameters({  userID: userID })
@@ -49,11 +49,10 @@ export class OrderService {
       order.createTimestamp = new Date();
       order.orderNumber = this.makeid(8);
       order.id = (await this.orderRepo.insert(order)).generatedMaps[0].id;
-      this.orderHistoryService.create(order.orderNumber, Status.CREATED);
-      return order;
+      await this.orderHistoryService.create(order.orderNumber, Status.CREATED);
+      return await this.orderRepo.findOne(order.id);
     } catch (error) {
-      throw console.log(error);
-      
+      return null;
     }
   }
   /**update */
@@ -107,7 +106,7 @@ export class OrderService {
     return result;
   }
   /**call payment and handle */
-  pay(order: Order, userID: string) {
+  async pay(order: Order, userID: string) {
     const delayTime = this.configService.get('X_SECOND');
     const paymentUrl = this.configService.get('PAYMENT_URL');
     const headersRequest = {
@@ -126,7 +125,7 @@ export class OrderService {
         category: order.category,
         userID: userID
     };
-    this.httpService.post(paymentUrl , data, { headers: headersRequest })
+    await this.httpService.post(paymentUrl , data, { headers: headersRequest })
     .pipe(
       catchError(e => {
         throw new HttpException(e.response.data, e.response.status);
@@ -150,6 +149,7 @@ export class OrderService {
         } else if(data.status === Status.CANCELLED) {
             self.cancel(data.orderId);
         }
+        return res.data;
     })
 
 }
