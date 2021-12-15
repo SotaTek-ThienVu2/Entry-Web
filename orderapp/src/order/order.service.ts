@@ -52,7 +52,8 @@ export class OrderService {
       this.orderHistoryService.create(order.orderNumber, Status.CREATED);
       return order;
     } catch (error) {
-      return null;
+      throw console.log(error);
+      
     }
   }
   /**update */

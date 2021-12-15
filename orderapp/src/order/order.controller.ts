@@ -38,8 +38,8 @@ export class OrderController {
   @Get(':orderNumber/history')
   @ApiOperation({ summary: 'Get order detail by orderNumber' })
   @ApiParam({name: 'orderNumber', required: true})
-  findDetail(@Param('orderNumber') orderNumber) {
-    return this.orderHistoryService.findByOrderNumber(orderNumber);
+  findHistory(@Param('orderNumber') orderNumber) {
+    return this.orderHistoryService.findHistoryOrder(orderNumber);
   }
   /**
    * create order

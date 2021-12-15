@@ -1,16 +1,76 @@
+import { Status } from '../../common/enum/Status';
+import { CreateOrderDto } from '../dto/create-order.dto'
+export const OrderMockData = {
+  id: 9,
+  orderNumber: '5x5sjP3m',
+  userID: '12',
+  name: 'Bánh tráng nướng',
+  category: 'Đồ ăn',
+  image: 'https://yummyday.vn/uploads/images/cach-lam-banh-trang-nuong-6.jpg',
+  address: 'Nhà ăn sinh viên Bách Khoa',
+  description: 'Ăn ngon thì vl',
+  price: 25000,
+  quantity: 15,
+  status: Status.DELIVERED,
+  createTimestamp: new Date(),
+  updateTimestamp: new Date(),
+};
 
-export const Order = {
+export const OrderListMockData = [
+  {
     id: 9,
-    orderNumber: "5x5sjP3m",
-    userID: "12",
-    name: "Bánh tráng nướng",
-    category: "Đồ ăn",
-    image: "https://yummyday.vn/uploads/images/cach-lam-banh-trang-nuong-6.jpg",
-    address: "Nhà ăn sinh viên Bách Khoa",
-    description: "Ăn ngon thì vl",
+    orderNumber: '5x5sjP3m',
+    userID: '12',
+    name: 'Bánh tráng nướng',
+    category: 'Đồ ăn',
+    image: 'https://yummyday.vn/uploads/images/cach-lam-banh-trang-nuong-6.jpg',
+    address: 'Nhà ăn sinh viên Bách Khoa',
+    description: 'Ăn ngon thì vl',
     price: 25000,
     quantity: 15,
-    status: "cancelled",
-    createTimestamp: "2021-12-14T08:15:52.000Z",
-    updateTimestamp: "2021-12-14T08:22:24.000Z"
-}
+    status: Status.CANCELLED,
+    createTimestamp: new Date(),
+    updateTimestamp: new Date(),
+  },
+  {
+    id: 8,
+    orderNumber: 'qKM99EgW',
+    userID: '12',
+    name: 'Bánh xe',
+    category: 'thời trang nam',
+    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+    address: 'Hà Nội',
+    description: 'Hàng dởm',
+    price: 110,
+    quantity: 1,
+    status: Status.CANCELLED,
+    createTimestamp: new Date(),
+    updateTimestamp: new Date(),
+  },
+  {
+    id: 7,
+    orderNumber: 'Z9JNHkpM',
+    userID: '12',
+    name: 'Bánh xe',
+    category: 'thời trang nam',
+    image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+    address: 'Hà Nội',
+    description: 'Hàng dởm',
+    price: 110,
+    quantity: 1,
+    status: Status.CANCELLED,
+    createTimestamp: new Date(),
+    updateTimestamp: new Date(),
+  },
+];
+
+export const CreateOrderMockDto : CreateOrderDto = {
+    name: "Bánh xe",
+    price: 109.5,
+    address: "Hà Nội",
+    quantity: 1,
+    description: "Hàng dởm",
+    category: "thời trang nam",
+    image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
+    userID : "12"
+};

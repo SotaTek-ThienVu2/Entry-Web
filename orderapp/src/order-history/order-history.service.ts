@@ -18,7 +18,7 @@ export class OrderHistoryService {
         });
     }
 
-    async findByOrderNumber (orderNumber): Promise<OrderHistory[]> {
+    async findHistoryOrder (orderNumber): Promise<OrderHistory[]> {
         return await this.orderHistoryRepository.find({orderNumber})
     }
 }
