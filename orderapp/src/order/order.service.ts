@@ -6,7 +6,7 @@ import { UpdateResult, DeleteResult, Repository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
-import { OrderHistoryService } from './order-history.service';
+import { OrderHistoryService } from '../order-history/order-history.service';
 import { catchError, tap } from 'rxjs/operators';
 @Injectable()
 export class OrderService {

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, ParseIntPipe,HttpStatus, Headers } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { OrderHistoryService } from './order-history.service';
+import { OrderHistoryService } from '../order-history/order-history.service';
 import { Order } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ApiOkResponse, ApiParam, ApiBody, ApiOperation } from '@nestjs/swagger';

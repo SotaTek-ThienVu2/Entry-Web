@@ -8,15 +8,13 @@ const OrderComponent = () => {
     const { id, name, price, category, orderNumber, status } = order;
     return (
       <div className="four wide column" key={id}>
-        
+        <Link to={`order/${id}`}>
           <div className="ui link cards">
             <div className="card card-custom">
               <div className="content">
                 <div className="card-header">
                   <div className="header">
-                <Link to={`order/${id}`}>
                     {name}
-                </Link>
                   <br />
                   <h6>#{orderNumber}</h6>
                   </div>
@@ -38,6 +36,7 @@ const OrderComponent = () => {
               </div>
             </div>
           </div>
+          </Link>
       </div>
     );
   });

@@ -1,6 +1,6 @@
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
-import { OrderHistoryService } from './order-history.service';
+import { OrderHistoryService } from '../order-history/order-history.service';
 import { Test, TestingModule } from '@nestjs/testing';
 
 describe('OrderController', () => {

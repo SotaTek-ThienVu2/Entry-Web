@@ -6,7 +6,6 @@
 
 .ui.cards > .card-custom {
   width: 100% !important;
-  cursor: default !important;
 }
 .ui.cards > .card > .image > img {
   height: 100%;
