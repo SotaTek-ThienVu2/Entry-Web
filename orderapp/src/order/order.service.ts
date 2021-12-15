@@ -1,8 +1,8 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException } from '@nestjs/common';
 import { Order } from './order.entity' 
-import { Status } from 'src/common/enum/Status';
+import { Status } from '../common/enum/Status';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateResult, DeleteResult, Repository, createConnection, getRepository } from  'typeorm';
+import { UpdateResult, DeleteResult, Repository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
@@ -11,11 +11,11 @@ import { catchError, tap } from 'rxjs/operators';
 @Injectable()
 export class OrderService {
   constructor(
+    private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
+    private readonly orderHistoryService: OrderHistoryService,
     @InjectRepository(Order)
     private readonly orderRepo: Repository<Order>,
-    private configService: ConfigService,
-    private httpService: HttpService,
-    private readonly orderHistoryService: OrderHistoryService,
   ) {}
   /**Get all order */
   async findAll (userID :string): Promise<Order[]> {

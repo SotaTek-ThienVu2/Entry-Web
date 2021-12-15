@@ -1,10 +1,7 @@
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { OrderHistoryService } from './order-history.service';
-import { OrderEntity } from './order.entity';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Order } from './mock/mockdata'
-import { Controller } from '@nestjs/common';
 
 describe('OrderController', () => {
   let orderController: OrderController;

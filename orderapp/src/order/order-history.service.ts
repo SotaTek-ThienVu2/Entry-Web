@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, InsertResult, getRepository } from 'typeorm';
 import { OrderHistory } from './order-history.entity';
-import { Status } from 'src/common/enum/Status';
+import { Status } from '../common/enum/Status';
 @Injectable()
 export class OrderHistoryService {
     constructor(
