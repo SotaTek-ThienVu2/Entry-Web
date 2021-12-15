@@ -17,7 +17,7 @@ describe('OrderService', () => {
       Promise.resolve({
         id: 9,
         orderNumber: "5x5sjP3m",
-        status: Status.CREATED,
+        status: status,
         createTimestamp: "2021-12-15T10:01:01.000Z"
       })
     })
@@ -44,6 +44,9 @@ describe('OrderService', () => {
           id: 9
         }
       ]
+    }),
+    update: jest.fn().mockImplementation((id, order)=>{
+      Promise.resolve(order)
     })
   };
 
@@ -94,4 +97,31 @@ describe('OrderService', () => {
   //   expect( service.create( CreateOrderMockDto , "12")).resolves.toEqual(OrderMockData);
   //   expect( service.create( CreateOrderMockDto , "12")).rejects.toBeCalled();
   // });
+
+  it(`should update order with id`, async () => {
+    await mockOrderRepository.update( 9, OrderMockData)
+    expect(await service.findOne(9)).toEqual(OrderMockData);
+  });
+
+  it(`should update order with id`, async () => {
+    const order = await service.findOne(9)
+    mockOrderHistoryService.insert( order.orderNumber , Status.CREATED)
+    await service.update({
+      id: 9,
+      orderNumber: '5x5sjP3m',
+      userID: '12',
+      name: 'Bánh tráng nướng',
+      category: 'Đồ ăn',
+      image: 'https://yummyday.vn/uploads/images/cach-lam-banh-trang-nuong-6.jpg',
+      address: 'Nhà ăn sinh viên Bách Khoa',
+      description: 'Ăn ngon thì vl',
+      price: 25000,
+      quantity: 15,
+      status: Status.DELIVERED,
+      createTimestamp: new Date('2021-12-15T10:01:01.000Z'),
+      updateTimestamp: new Date('2021-12-15T10:11:54.000Z')
+    })
+    expect(await service.findOne(9)).toEqual(OrderMockData);
+  });
+
 });
