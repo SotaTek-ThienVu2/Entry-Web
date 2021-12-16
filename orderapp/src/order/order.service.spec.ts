@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { Order } from './order.entity';
 import { OrderMockData, OrderListMockData, CreateOrderMockDto} from './mock/mockdata';
-import { Status } from '../common/enum/status.enum';
+import { OrderStatus } from '../common/enum/status.enum';
 import {
   HttpStatus,
   HttpException
@@ -22,7 +22,7 @@ describe('OrderService', () => {
     } )
   }
   let mockOrderHistoryService = {
-    insert: jest.fn().mockImplementation((status: Status, orderNumber: string)=>{
+    insert: jest.fn().mockImplementation((status: OrderStatus, orderNumber: string)=>{
       Promise.resolve({
         id: 9,
         orderNumber: "5x5sjP3m",
@@ -107,7 +107,7 @@ describe('OrderService', () => {
       insert: jest.fn().mockResolvedValue({
         id: 9,
         orderNumber: "5x5sjP3m",
-        status: Status.CREATED,
+        status: OrderStatus.CREATED,
         createTimestamp: "2021-12-15T10:01:01.000Z"
       })
     }
@@ -126,7 +126,7 @@ describe('OrderService', () => {
 
   it(`should update order with id`, async () => {
     const order = await service.findOne(9)
-    mockOrderHistoryService.insert( order.orderNumber , Status.CREATED)
+    mockOrderHistoryService.insert( order.orderNumber , OrderStatus.CREATED)
     await service.update({
       id: 9,
       orderNumber: '5x5sjP3m',
@@ -138,7 +138,7 @@ describe('OrderService', () => {
       description: 'Ăn ngon thì vl',
       price: 25000,
       quantity: 15,
-      status: Status.DELIVERED,
+      status: OrderStatus.DELIVERED,
       createTimestamp: new Date('2021-12-15T10:01:01.000Z'),
       updateTimestamp: new Date('2021-12-15T10:11:54.000Z')
     })
@@ -147,7 +147,7 @@ describe('OrderService', () => {
 
   it(`should cancel order with id`, async () => {
     const order = await service.findOne(9)
-    mockOrderHistoryService.insert( order.orderNumber , Status.CANCELLED)
+    mockOrderHistoryService.insert( order.orderNumber , OrderStatus.CANCELLED)
     await service.update({
       id: 9,
       orderNumber: '5x5sjP3m',
@@ -159,7 +159,7 @@ describe('OrderService', () => {
       description: 'Ăn ngon thì vl',
       price: 25000,
       quantity: 15,
-      status: Status.CANCELLED,
+      status: OrderStatus.CANCELLED,
       createTimestamp: new Date('2021-12-15T10:01:01.000Z'),
       updateTimestamp: new Date('2021-12-15T10:11:54.000Z')
     })
@@ -168,7 +168,7 @@ describe('OrderService', () => {
 
   it(`should confirm order with id`, async () => {
     const order = await service.findOne(9)
-    mockOrderHistoryService.insert( order.orderNumber , Status.CONFIRMED)
+    mockOrderHistoryService.insert( order.orderNumber , OrderStatus.CONFIRMED)
     await service.update({
       id: 9,
       orderNumber: '5x5sjP3m',
@@ -180,7 +180,7 @@ describe('OrderService', () => {
       description: 'Ăn ngon thì vl',
       price: 25000,
       quantity: 15,
-      status: Status.CONFIRMED,
+      status: OrderStatus.CONFIRMED,
       createTimestamp: new Date('2021-12-15T10:01:01.000Z'),
       updateTimestamp: new Date('2021-12-15T10:11:54.000Z')
     })
@@ -192,36 +192,36 @@ describe('OrderService', () => {
     expect(await service.delete(9)).toEqual({affected: 1});
   });
 
-  // it('should do get request and return entries', (done) => {
+  it('should do get request and return entries', (done) => {
 
-  //   jest.spyOn(service['http'], 'post').mockReturnValue(of({data: require('../mocks/entries.json'), status: 200, statusText: 'OK', headers: {}, config: {}}));
-  //   let data = {};
+    jest.spyOn(service['http'], 'post').mockReturnValue(of({data: require('../mocks/entries.json'), status: 200, statusText: 'OK', headers: {}, config: {}}));
+    let data = {};
 
-  //   mockOrderRepository.getEntries().subscribe({
-  //     next: (val) => {data = val},
-  //     error: (err) => { throw err; },
-  //     complete: () => {
-  //       expect(data).toEqual(require('../mocks/entries.json'))
-  //       done();
-  //     }
-  //   });
-  // });
+    mockOrderRepository.getEntries().subscribe({
+      next: (val) => {data = val},
+      error: (err) => { throw err; },
+      complete: () => {
+        expect(data).toEqual(require('../mocks/entries.json'))
+        done();
+      }
+    });
+  });
   
-  // it('should return error if request failed', (done) => {
-  //   jest.spyOn(service['http'], 'get').mockReturnValue(throwError('request failed'));
-  //   let data = {};
+  it('should return error if request failed', (done) => {
+    jest.spyOn(service['http'], 'get').mockReturnValue(throwError('request failed'));
+    let data = {};
 
-  //   service.getEntries().subscribe({
-  //     next: (val) => {data = val},
-  //     error: (err) => {
-  //       expect(err).toBe('request failed');
-  //       done();
-  //     },
-  //     complete: () => {
-  //       expect(data).toBeUndefined();
-  //       done();
-  //     }
-  //   });
-  // });
+    service.getEntries().subscribe({
+      next: (val) => {data = val},
+      error: (err) => {
+        expect(err).toBe('request failed');
+        done();
+      },
+      complete: () => {
+        expect(data).toBeUndefined();
+        done();
+      }
+    });
+  });
 
 });

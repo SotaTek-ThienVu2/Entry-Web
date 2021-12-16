@@ -1,4 +1,4 @@
-import { OrderStatus } from 'src/common/enum/status.enum';
+import { OrderStatus } from '../common/enum/status.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity()
 export class Order {

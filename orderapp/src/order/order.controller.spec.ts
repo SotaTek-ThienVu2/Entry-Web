@@ -2,7 +2,7 @@ import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { OrderHistoryService } from '../order-history/order-history.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Status } from '../common/enum/status.enum';
+import { OrderStatus } from '../common/enum/status.enum';
 import { OrderMockData, OrderListMockData, CreateOrderMockDto} from './mock/mockdata';
 import { Order } from './order.entity';
 describe('OrderController', () => {
@@ -18,7 +18,7 @@ describe('OrderController', () => {
       ...CreateOrderMockDto,
       createTimestamp: "2021-12-15T12:11:05.107Z",
       updateTimestamp: "2021-12-15T12:11:05.107Z",
-      status: Status.CREATED,
+      status: OrderStatus.CREATED,
       orderNumber: "0i0J7UYO",
       userID: userID
     })),
@@ -70,7 +70,7 @@ describe('OrderController', () => {
       orderNumber: "0i0J7UYO",
       price: 109.5,
       quantity: 1,
-      status: "created",
+      status: OrderStatus.CREATED,
       updateTimestamp: "2021-12-15T12:11:05.107Z",
       userID: "12"
     });

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { OrderStatus } from 'src/common/enum/status.enum';
+import { OrderStatus } from '../common/enum/status.enum';
 import { Repository, InsertResult, getRepository } from 'typeorm';
 import { OrderHistory } from './order-history.entity';
 @Injectable()

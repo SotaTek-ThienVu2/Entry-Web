@@ -7,7 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { OrderHistoryService } from '../order-history/order-history.service';
 import { catchError, tap } from 'rxjs/operators';
-import { OrderStatus } from 'src/common/enum/status.enum';
+import { OrderStatus } from '../common/enum/status.enum';
 @Injectable()
 export class OrderService {
   constructor(
@@ -53,7 +53,6 @@ export class OrderService {
       await this.orderHistoryService.create(order.orderNumber, OrderStatus.CREATED);
       return await this.orderRepo.findOne(order.id);
     } catch (error) {
-      console.log( "error",error);
       return null;
     }
   }
@@ -130,7 +129,6 @@ export class OrderService {
     await this.httpService.post(paymentUrl , data, { headers: headersRequest })
     .pipe(
       catchError(e => {
-        console.log("error here", e);
         throw new HttpException(e.response.data, e.response.status);
       }),
       tap(response => {
