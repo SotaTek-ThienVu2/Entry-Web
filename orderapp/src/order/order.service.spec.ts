@@ -6,7 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { Order } from './order.entity';
 import { OrderMockData, OrderListMockData, CreateOrderMockDto} from './mock/mockdata';
-import { Status } from '../common/enum/Status';
+import { Status } from '../common/enum/status.enum';
 import {
   HttpStatus,
   HttpException

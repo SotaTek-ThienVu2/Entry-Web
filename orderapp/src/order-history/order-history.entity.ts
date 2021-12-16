@@ -1,4 +1,4 @@
-import { Status } from 'src/common/enum/Status';
+import { OrderStatus } from 'src/common/enum/status.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -11,8 +11,8 @@ export class OrderHistory {
 
     @Column({
         type: 'enum',
-        enum: Status,
-        default: Status.CREATED,
+        enum: OrderStatus,
+        default: OrderStatus.CREATED,
     })
     status: string;
 

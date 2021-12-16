@@ -1,4 +1,4 @@
-import { Status } from '../../common/enum/Status';
+import { OrderStatus } from 'src/common/enum/status.enum';
 import { CreateOrderDto } from '../dto/create-order.dto'
 export const OrderMockData = {
   id: 9,
@@ -11,7 +11,7 @@ export const OrderMockData = {
   description: 'Ăn ngon thì vl',
   price: 25000,
   quantity: 15,
-  status: Status.DELIVERED,
+  status: OrderStatus.DELIVERED,
   createTimestamp: "2021-12-15T10:01:01.000Z",
   updateTimestamp: "2021-12-15T10:11:54.000Z"
 };
@@ -28,7 +28,7 @@ export const OrderListMockData = [
     description: 'Ăn ngon thì vl',
     price: 25000,
     quantity: 15,
-    status: Status.CANCELLED,
+    status: OrderStatus.CANCELLED,
     createTimestamp: "2021-12-15T10:01:01.000Z",
     updateTimestamp: "2021-12-15T10:01:01.000Z",
   },
@@ -43,7 +43,7 @@ export const OrderListMockData = [
     description: 'Hàng dởm',
     price: 110,
     quantity: 1,
-    status: Status.CANCELLED,
+    status: OrderStatus.CANCELLED,
     createTimestamp: "2021-12-15T10:01:01.000Z",
     updateTimestamp: "2021-12-15T10:01:01.000Z",
   },
@@ -58,7 +58,7 @@ export const OrderListMockData = [
     description: 'Hàng dởm',
     price: 110,
     quantity: 1,
-    status: Status.CANCELLED,
+    status: OrderStatus.CANCELLED,
     createTimestamp: "2021-12-15T10:01:01.000Z",
     updateTimestamp: "2021-12-15T10:01:01.000Z",
   },

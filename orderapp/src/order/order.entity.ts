@@ -1,5 +1,5 @@
+import { OrderStatus } from 'src/common/enum/status.enum';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Status } from '../common/enum/Status';
 @Entity()
 export class Order {
     /**ID */
@@ -31,10 +31,10 @@ export class Order {
     /**status */
     @Column({
         type: 'enum',
-        enum: Status,
-        default: Status.CREATED,
+        enum: OrderStatus,
+        default: OrderStatus.CREATED,
     })
-    status: Status;
+    status: OrderStatus;
     /**created Date */
     @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     createTimestamp: Date;

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { OrderStatus } from 'src/common/enum/status.enum';
 import { Repository, InsertResult, getRepository } from 'typeorm';
 import { OrderHistory } from './order-history.entity';
-import { Status } from '../common/enum/Status';
 @Injectable()
 export class OrderHistoryService {
     constructor(
@@ -10,7 +10,7 @@ export class OrderHistoryService {
         private readonly orderHistoryRepository: Repository<OrderHistory>,
     ) {}
 
-    create(orderNumber: string, status: Status): Promise<InsertResult> {
+    create(orderNumber: string, status: OrderStatus): Promise<InsertResult> {
         return this.orderHistoryRepository.insert({
             status,
             orderNumber,

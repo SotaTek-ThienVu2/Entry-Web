@@ -2,7 +2,7 @@ import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 import { OrderHistoryService } from '../order-history/order-history.service';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Status } from '../common/enum/Status';
+import { Status } from '../common/enum/status.enum';
 import { OrderMockData, OrderListMockData, CreateOrderMockDto} from './mock/mockdata';
 import { Order } from './order.entity';
 describe('OrderController', () => {

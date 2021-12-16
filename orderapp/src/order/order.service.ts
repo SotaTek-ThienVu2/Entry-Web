@@ -1,6 +1,5 @@
 import { Injectable, HttpException, NotFoundException } from '@nestjs/common';
 import { Order } from './order.entity' 
-import { Status } from '../common/enum/Status';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult, DeleteResult, Repository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -8,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios';
 import { OrderHistoryService } from '../order-history/order-history.service';
 import { catchError, tap } from 'rxjs/operators';
+import { OrderStatus } from 'src/common/enum/status.enum';
 @Injectable()
 export class OrderService {
   constructor(
@@ -48,10 +48,12 @@ export class OrderService {
       order.userID = userID;
       order.createTimestamp = new Date();
       order.orderNumber = this.makeid(8);
-      order.id = (await this.orderRepo.insert(order)).generatedMaps[0].id;
-      await this.orderHistoryService.create(order.orderNumber, Status.CREATED);
+      const insertResult = await this.orderRepo.insert(order);
+      order.id = insertResult.generatedMaps[0].id;
+      await this.orderHistoryService.create(order.orderNumber, OrderStatus.CREATED);
       return await this.orderRepo.findOne(order.id);
     } catch (error) {
+      console.log( "error",error);
       return null;
     }
   }
@@ -65,11 +67,11 @@ export class OrderService {
    */
   async cancel(id: number): Promise<Order> {
     let order = await this.orderRepo.findOne({id});
-    this.orderHistoryService.create(order.orderNumber, Status.CANCELLED);
-    if(order.status === Status.CREATED || order.status === Status.CONFIRMED){
+    this.orderHistoryService.create(order.orderNumber, OrderStatus.CANCELLED);
+    if(order.status === OrderStatus.CREATED || order.status === OrderStatus.CONFIRMED){
       await this.orderRepo.update(
           { id },
-          { status: Status.CANCELLED, updateTimestamp: new Date() },
+          { status: OrderStatus.CANCELLED, updateTimestamp: new Date() },
       );
     }
     return this.orderRepo.findOne({id})
@@ -77,11 +79,11 @@ export class OrderService {
   /**confirm order */
   async confirm(id: number): Promise<Order> {
     let order = await this.orderRepo.findOne({id});
-    this.orderHistoryService.create(order.orderNumber, Status.CONFIRMED);
-    if (order.status === Status.CREATED) {
+    this.orderHistoryService.create(order.orderNumber, OrderStatus.CONFIRMED);
+    if (order.status === OrderStatus.CREATED) {
       await this.orderRepo.update(
           { id },
-          { status: Status.CONFIRMED, updateTimestamp: new Date() },
+          { status: OrderStatus.CONFIRMED, updateTimestamp: new Date() },
       );
     }
     return this.orderRepo.findOne({id})
@@ -110,7 +112,7 @@ export class OrderService {
     const delayTime = this.configService.get('X_SECOND');
     const paymentUrl = this.configService.get('PAYMENT_URL');
     const headersRequest = {
-        'Secret-key': Math.floor(Math.random() * 2) == 0 ? Status.CONFIRMED : Status.CANCELLED,
+        'Secret-key': Math.floor(Math.random() * 2) == 0 ? OrderStatus.CONFIRMED : OrderStatus.CANCELLED,
     };
     const self = this;
     const data = {
@@ -125,11 +127,10 @@ export class OrderService {
         category: order.category,
         userID: userID
     };
-    console.log(order);
-    
     await this.httpService.post(paymentUrl , data, { headers: headersRequest })
     .pipe(
       catchError(e => {
+        console.log("error here", e);
         throw new HttpException(e.response.data, e.response.status);
       }),
       tap(response => {
@@ -139,16 +140,16 @@ export class OrderService {
     .subscribe(
       res => {
         let data = res.data;
-        if (data.status === Status.CONFIRMED) {
+        if (data.status === OrderStatus.CONFIRMED) {
             self.confirm(data.orderId);
             setTimeout(() => {
                 self.orderRepo.update(
                     { id: data.orderId },
-                    { status: Status.DELIVERED, updateTimestamp: new Date() },
+                    { status: OrderStatus.DELIVERED, updateTimestamp: new Date() },
                 );
-                this.orderHistoryService.create(order.orderNumber, Status.DELIVERED);
+                this.orderHistoryService.create(order.orderNumber, OrderStatus.DELIVERED);
             }, delayTime);
-        } else if(data.status === Status.CANCELLED) {
+        } else if(data.status === OrderStatus.CANCELLED) {
             self.cancel(data.orderId);
         }
         return res.data;
