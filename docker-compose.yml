@@ -22,8 +22,7 @@ services:
     # environment:
     #   DATABASE_URL: mariadb-order://'dev'@'%'/order
     networks:
-      - default
-      - payments_default
+      - default 
     external_links:
       - payments_web_1:payments.local
   payment:
@@ -39,12 +38,12 @@ services:
     # environment:
     #   DATABASE_URL: mariadb://'dev'@'%'/payment
     networks:
-      - default
+      - default 
   mariadb-order:
     image: mariadb:10.2
     restart: on-failure
-    # ports:
-      # - '3306:3306'
+    networks:
+      - default 
     environment:
       MYSQL_ROOT_PASSWORD: 12345678@Abc
       MYSQL_ROOT_HOST: '%'
@@ -56,8 +55,8 @@ services:
   mariadb-payment:
     image: mariadb:10.2
     restart: on-failure
-    # ports:
-      # - '3307:3307'
+    networks:
+      - default 
     environment:
       MYSQL_ROOT_PASSWORD: 12345678@Abc
       MYSQL_ROOT_HOST: '%'
@@ -72,5 +71,5 @@ volumes:
   mariadb_data_payment:
     driver: local
 networks:
-  payments_default:
-    # external: true
+  default:
+    driver: bridge

@@ -128,6 +128,8 @@ export class OrderService {
     await this.httpService.post(paymentUrl , data, { headers: headersRequest })
     .pipe(
       catchError(e => {
+        console.log("Lỗi exception ==> " + e);
+        
         throw new HttpException(e.response.data, e.response.status);
       }),
       tap(response => {

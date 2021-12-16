@@ -22,12 +22,9 @@ const OrderDetails = () => {
   };
   const onCancel = async () => {
     const response = await put(`orders/${id}/cancel`)
-      if (response === 1) {
+      console.log("cancel response", response);
         fetchOrderDetail(id);
-      }else{
-        fetchOrderDetail(id);
-        alert(ConstantsList.ERROR)
-      }
+      
   };
   useEffect(() => {
     if (id && id !== "") {

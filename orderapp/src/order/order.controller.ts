@@ -52,18 +52,9 @@ export class OrderController {
   async create(@Headers('userID') userID: string, @Body() dto: CreateOrderDto) {
     const order = await this.orderService.create(dto, userID);
     if(!!order){
-      await this.pay(order, userID);
+      await this.orderService.pay(order, userID);
     }
     return order;
-  }
-  /**
-   * 
-   * @param order 
-   * @param userID 
-   * @returns 
-   */
-  async pay(order: Order, userID: string){
-    return await this.orderService.pay(order, userID);
   }
   /**
    * cancel order

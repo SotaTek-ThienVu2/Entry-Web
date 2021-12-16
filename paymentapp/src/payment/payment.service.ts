@@ -40,6 +40,9 @@ export class PaymentService {
                 payment.quantity = dto.quantity;
                 payment.address = dto.address;
                 payment.status =  Status.CONFIRMED;
+                payment.userID = dto.userID;
+                payment.createTimestamp = new Date();
+                payment.updateTimestamp = new Date();
                 this.paymentRepository.insert(payment);
                 return payment;
             }.bind(this));
@@ -58,6 +61,9 @@ export class PaymentService {
                 payment.quantity = dto.quantity;
                 payment.address = dto.address;
                 payment.status =  Status.CANCELLED;
+                payment.userID = dto.userID;
+                payment.createTimestamp = new Date();
+                payment.updateTimestamp = new Date();
                 this.paymentRepository.insert(payment);
                 return payment;
             }.bind(this));

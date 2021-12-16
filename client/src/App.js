@@ -14,6 +14,7 @@ function App() {
     dispatch(setOrder(response));
   }
   useEffect(() => {
+    fetchOrders();
     const reloadOrderList = setInterval(() => {
       fetchOrders();
     }, process.env.REACT_APP_INTERVAL);
