@@ -2,15 +2,13 @@ import { Injectable} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { Payment } from './payment.entity';
-import { Status } from 'src/common/Status';
+import { Status } from '../common/Status';
 import { CreatePaymentDto } from './dto/create-payment.dto';
-import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class PaymentService {
     constructor(
         @InjectRepository(Payment)
         private readonly paymentRepository: Repository<Payment>,
-        private configService: ConfigService,
     ) {}
     /**
      * 

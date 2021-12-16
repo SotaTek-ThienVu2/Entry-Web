@@ -1,5 +1,5 @@
 import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import { Status } from 'src/common/Status';
+import { Status } from '../common/Status';
 @Entity()
 export class Payment {
     /**ID */

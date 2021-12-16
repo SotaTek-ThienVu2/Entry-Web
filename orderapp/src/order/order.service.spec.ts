@@ -25,9 +25,9 @@ describe('OrderService', () => {
     insert: jest.fn().mockImplementation((status: OrderStatus, orderNumber: string)=>{
       Promise.resolve({
         id: 9,
-        orderNumber: "5x5sjP3m",
-        status: status,
-        createTimestamp: "2021-12-15T10:01:01.000Z"
+        orderNumber: '5x5sjP3m',
+        status: OrderStatus.CREATED,
+        createTimestamp: new Date('2021-12-15T10:01:01.000Z'),
       })
     })
   };
@@ -108,7 +108,7 @@ describe('OrderService', () => {
         id: 9,
         orderNumber: "5x5sjP3m",
         status: OrderStatus.CREATED,
-        createTimestamp: "2021-12-15T10:01:01.000Z"
+        createTimestamp: new Date("2021-12-15T10:01:01.000Z")
       })
     }
     try {
