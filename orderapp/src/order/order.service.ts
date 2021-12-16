@@ -125,11 +125,11 @@ export class OrderService {
         category: order.category,
         userID: userID
     };
+    console.log(order);
+    
     await this.httpService.post(paymentUrl , data, { headers: headersRequest })
     .pipe(
       catchError(e => {
-        console.log("Lỗi exception ==> " + e);
-        
         throw new HttpException(e.response.data, e.response.status);
       }),
       tap(response => {

@@ -1,5 +1,11 @@
-import { IsString, IsInt, IsNumber, IsUrl, IsNotEmpty, IsOptional, NotEquals } from 'class-validator';
+import { IsString, IsInt, IsNumber, IsUrl, IsNotEmpty, IsOptional, NotEquals, IsEnum, IsDate } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+export enum Status {
+    CREATED = 'created',
+    CONFIRMED = 'confirmed',
+    CANCELLED = 'cancelled',
+    DELIVERED = 'delivered',
+}
 export class CreatePaymentDto {
     @ApiProperty()
     @IsInt()
@@ -47,4 +53,13 @@ export class CreatePaymentDto {
     @IsUrl()
     @IsOptional()
     readonly image: string;
+    @ApiProperty()
+    @IsEnum(Status)
+    status: Status
+    @ApiProperty()
+    @IsDate()
+    readonly createTimestamp: Date;
+    @ApiProperty()
+    @IsDate()
+    readonly updateTimestamp: Date;
 }

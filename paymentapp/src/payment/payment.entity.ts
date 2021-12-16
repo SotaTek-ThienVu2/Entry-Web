@@ -34,7 +34,6 @@ export class Payment {
     @Column({
         type: 'enum',
         enum: Status,
-        default: Status.CONFIRMED,
     })
     status: Status;
     /**created date */
