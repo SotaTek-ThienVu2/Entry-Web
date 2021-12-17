@@ -50,8 +50,9 @@ export class OrderService {
       order.orderNumber = this.makeid(8);
       const insertResult = await this.orderRepo.insert(order);
       order.id = insertResult.generatedMaps[0].id;
-      await this.orderHistoryService.create(order.orderNumber, OrderStatus.CREATED);
-      return await this.orderRepo.findOne(order.id);
+      var inserted = await this.orderHistoryService.create(order.orderNumber, OrderStatus.CREATED);
+      const newOrder = await this.orderRepo.findOne(order.id);;
+      return newOrder;
     } catch (error) {
       return null;
     }
@@ -106,52 +107,56 @@ export class OrderService {
       }
     return result;
   }
-  /**call payment and handle */
+
   async pay(order: Order, userID: string) {
-    const delayTime = this.configService.get('X_SECOND');
-    const paymentUrl = this.configService.get('PAYMENT_URL');
-    const headersRequest = {
-        'Secret-key': Math.floor(Math.random() * 2) == 0 ? OrderStatus.CONFIRMED : OrderStatus.CANCELLED,
-    };
     const self = this;
-    const data = {
-        name: order.name,
-        description: order.description,
-        price: order.price,
-        orderNumber: order.orderNumber,
-        orderId: order.id,
-        address: order.address,
-        quantity: order.quantity,
-        image: order.image,
-        category: order.category,
-        userID: userID
+    const http = require('http');
+    const data = JSON.stringify({
+      name: order.name,
+      description: order.description,
+      price: order.price,
+      orderNumber: order.orderNumber,
+      orderId: order.id,
+      address: order.address,
+      quantity: order.quantity,
+      image: order.image,
+      category: order.category,
+      userID: userID
+    });
+    const options = {
+        hostname: 'payment',
+        port: 8002,
+        path: '/payment',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': data.length,
+            'Secret-key': Math.floor(Math.random() * 2) == 0 ? OrderStatus.CONFIRMED : OrderStatus.CANCELLED,
+        },
     };
-    await this.httpService.post(paymentUrl , data, { headers: headersRequest })
-    .pipe(
-      catchError(e => {
-        throw new HttpException(e.response.data, e.response.status);
-      }),
-      tap(response => {
-        if(!response.data){self.delete(data.orderId)}
-      })
-    )
-    .subscribe(
-      res => {
-        let data = res.data;
-        if (data.status === OrderStatus.CONFIRMED) {
-            self.confirm(data.orderId);
-            setTimeout(() => {
-                self.orderRepo.update(
-                    { id: data.orderId },
+    const req = await http.request(options, (res) => {
+        let responseString = '';
+        res.on('data', (responseData) => {
+            responseString += responseData;
+        });
+        res.on('end', () => {
+            const responseJson = JSON.parse(responseString);
+            if (responseJson.status === OrderStatus.CONFIRMED) {
+                self.confirm(responseJson.orderId);
+                setTimeout(() => {
+                    self.orderRepo.update(
+                    { id: responseJson.orderId },
                     { status: OrderStatus.DELIVERED, updateTimestamp: new Date() },
                 );
-                this.orderHistoryService.create(order.orderNumber, OrderStatus.DELIVERED);
-            }, delayTime);
-        } else if(data.status === OrderStatus.CANCELLED) {
-            self.cancel(data.orderId);
-        }
-        return res.data;
-    })
+                this.orderHistoryService.create(responseJson.orderNumber, OrderStatus.DELIVERED);
+                }, 5000);
+            } else {
+                self.cancel(responseJson.orderId);
+            }
+        });
+    });
 
+    req.write(data);
+    req.end();
 }
 }

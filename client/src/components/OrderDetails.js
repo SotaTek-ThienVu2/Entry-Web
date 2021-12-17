@@ -84,7 +84,7 @@ const OrderDetails = () => {
                 </ul>
                 <div className="ui grid">
                   <div className="eight wide column">
-                  {(status === 'confirmed' || status === 'created') ? 
+                  {(status === 'CONFIRMED' || status === 'CREATED') ? 
                   <div className="ui vertical animated button" tabIndex="0" onClick={onCancel}>
                     <div className="visible content">Cancel</div>
                   </div>: 

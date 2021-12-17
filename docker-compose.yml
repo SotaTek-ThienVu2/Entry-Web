@@ -68,9 +68,9 @@ services:
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
 volumes:
   mariadb_data_order:
-    driver: local
+    driver: bridge
   mariadb_data_payment:
-    driver: local
-# networks:
-#   default:
-#     driver: bridge
+    driver: bridge
+networks:
+  default:
+    driver: bridge

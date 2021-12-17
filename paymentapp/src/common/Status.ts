@@ -1,4 +1,4 @@
 export enum Status {
-    CONFIRMED = 'confirmed',
-    CANCELLED = 'cancelled',
+    CONFIRMED = 'CONFIRMED',
+    CANCELLED = 'CANCELLED',
 }
