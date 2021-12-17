@@ -9,7 +9,7 @@ export class PaymentController {
   @Post()
   @ApiOperation({ summary: 'Create payment' })
   @ApiBody({ type: CreatePaymentDto, required: true, })
-  create(@Body() dto: CreatePaymentDto, @Headers('Secret-key') key: string) {
+  create(@Body() dto: CreatePaymentDto, @Headers('DUMMY-PIN') key: string) {
     return this.paymentService.create(dto, key);
   }
 

@@ -111,18 +111,20 @@ export class OrderService {
   async pay(order: Order, userID: string) {
     const self = this;
     const http = require('http');
-    const data = JSON.stringify({
-      name: order.name,
-      description: order.description,
-      price: order.price,
-      orderNumber: order.orderNumber,
-      orderId: order.id,
-      address: order.address,
-      quantity: order.quantity,
-      image: order.image,
-      category: order.category,
-      userID: userID
-    });
+    const data = new TextEncoder().encode(
+      JSON.stringify({
+        name: order.name,
+        description: order.description,
+        price: order.price,
+        orderNumber: order.orderNumber,
+        orderId: order.id,
+        address: order.address,
+        quantity: order.quantity,
+        image: order.image,
+        category: order.category,
+        userID: userID
+      })
+    )
     const options = {
         hostname: 'payment',
         port: 8002,
@@ -131,7 +133,7 @@ export class OrderService {
         headers: {
             'Content-Type': 'application/json',
             'Content-Length': data.length,
-            'Secret-key': Math.floor(Math.random() * 2) == 0 ? OrderStatus.CONFIRMED : OrderStatus.CANCELLED,
+            'DUMMY-PIN': Math.floor(Math.random() * 2) == 0 ? OrderStatus.CONFIRMED : OrderStatus.CANCELLED,
         },
     };
     const req = await http.request(options, (res) => {
@@ -139,6 +141,9 @@ export class OrderService {
         res.on('data', (responseData) => {
             responseString += responseData;
         });
+        req.on('error', error => {
+          throw new Error(error);
+        })
         res.on('end', () => {
             const responseJson = JSON.parse(responseString);
             if (responseJson.status === OrderStatus.CONFIRMED) {
@@ -155,7 +160,6 @@ export class OrderService {
             }
         });
     });
-
     req.write(data);
     req.end();
 }

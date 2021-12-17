@@ -65,7 +65,7 @@ const OrderDetails = () => {
             <div className="ui vertical divider">AND</div>
             <div className="middle aligned row">
               <div className="column lp">
-                <img className="ui fluid image" src={image} />
+                {!!image ? <img className="ui fluid image" src={image} />: <div className="ui fluid image">Have no image</div>}
               </div>
               <div className="column rp order-detail-custom">
                 <h5>#{orderNumber}</h5>
