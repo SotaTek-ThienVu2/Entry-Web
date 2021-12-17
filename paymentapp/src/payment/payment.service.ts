@@ -4,11 +4,13 @@ import { Repository, UpdateResult } from 'typeorm';
 import { Payment } from './payment.entity';
 import { Status } from '../common/Status';
 import { CreatePaymentDto } from './dto/create-payment.dto';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class PaymentService {
     constructor(
         @InjectRepository(Payment)
         private readonly paymentRepository: Repository<Payment>,
+        private readonly configService: ConfigService,
     ) {}
     /**
      * 
@@ -23,22 +25,22 @@ export class PaymentService {
      * @returns payment
      */
     async create(dto: CreatePaymentDto, key: string): Promise<Payment> {
-        if(key === Status.CONFIRMED){
+        const secretK = this.configService.get('SECRET_KEY');
+        if(key === secretK){
             return await this.paymentRepository.findOneOrFail({ orderNumber: dto.orderNumber }).then((payment) => {
                 return payment;
             }, function() {
-                dto.status = Status.CONFIRMED;
+                if(Math.floor(Math.random() * 2) == 0){
+                    dto.status = Status.CONFIRMED;
+                }
+                else{
+                    dto.status = Status.CANCELLED;
+                }
                 this.paymentRepository.insert(dto);
                 return dto;
             }.bind(this));
         }else{
-            return await this.paymentRepository.findOneOrFail({ orderNumber: dto.orderNumber }).then((payment) => {
-                return payment;
-            }, function() {
-                dto.status = Status.CANCELLED;
-                this.paymentRepository.insert(dto);
-                return dto;
-            }.bind(this));
+            return null;
         }
     }
 }

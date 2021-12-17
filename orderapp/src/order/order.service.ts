@@ -1,18 +1,15 @@
-import { Injectable, HttpException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Order } from './order.entity' 
 import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateResult, DeleteResult, Repository } from  'typeorm';
+import { DeleteResult, Repository } from  'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
 import { OrderHistoryService } from '../order-history/order-history.service';
-import { catchError, tap } from 'rxjs/operators';
 import { OrderStatus } from '../common/enum/status.enum';
 @Injectable()
 export class OrderService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly httpService: HttpService,
     private readonly orderHistoryService: OrderHistoryService,
     @InjectRepository(Order)
     private readonly orderRepo: Repository<Order>,
@@ -29,9 +26,6 @@ export class OrderService {
   /**Get 1 by id */
   async findOne (id): Promise<Order> {
     const order = await this.orderRepo.findOne({id})
-    if (!order) {
-      throw new NotFoundException();
-    }
     return order;
   }
   /**create order */
@@ -127,6 +121,7 @@ export class OrderService {
     )
     const delayTime = this.configService.get('X_SECOND');
     const paymentHost = this.configService.get('PAYMENT_HOST');
+    const secretK = this.configService.get('SECRET_KEY');
     const options = {
         hostname: paymentHost,
         port: 8002,
@@ -135,7 +130,7 @@ export class OrderService {
         headers: {
             'Content-Type': 'application/json',
             'Content-Length': data.length,
-            'DUMMY-PIN': Math.floor(Math.random() * 2) == 0 ? OrderStatus.CONFIRMED : OrderStatus.CANCELLED,
+            'DUMMY-PIN': secretK,
         },
     };
     const req = await http.request(options, (res) => {

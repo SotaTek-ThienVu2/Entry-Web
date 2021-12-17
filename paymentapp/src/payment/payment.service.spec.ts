@@ -3,11 +3,16 @@ import { PaymentService } from './payment.service';
 
 describe('PaymentService', () => {
   let service: PaymentService;
+  let mockService = {
 
+  }
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [PaymentService],
-    }).compile();
+    })
+    .overrideProvider(PaymentService)
+    .useValue(mockService)
+    .compile();
 
     service = module.get<PaymentService>(PaymentService);
   });

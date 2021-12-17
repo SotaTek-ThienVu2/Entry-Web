@@ -3,24 +3,13 @@ import { OrderService } from './order.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { OrderHistoryService } from '../order-history/order-history.service';
 import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
 import { Order } from './order.entity';
 import { OrderMockData, OrderListMockData, CreateOrderMockDto} from './mock/mockdata';
 import { OrderStatus } from '../common/enum/status.enum';
-import {
-  HttpStatus,
-  HttpException
-} from '@nestjs/common';
-import { of } from 'rxjs';
+import { HttpStatus, HttpException } from '@nestjs/common';
 describe('OrderService', () => {
   let service: OrderService;
   let orderHistoryService: OrderHistoryService;
-  let httpService : HttpService;
-  let mockHttpService = {
-    post: jest.fn().mockImplementation((paymentUrl: string, data: Object, {headers: {headersRequest}}) =>{
-
-    } )
-  }
   let mockOrderHistoryService = {
     insert: jest.fn().mockImplementation((status: OrderStatus, orderNumber: string)=>{
       Promise.resolve({
@@ -65,7 +54,6 @@ describe('OrderService', () => {
       providers: [
         OrderService,
         ConfigService,
-        HttpService,
         OrderHistoryService,
         {
           provide: getRepositoryToken(Order),
@@ -75,13 +63,10 @@ describe('OrderService', () => {
     })
       .overrideProvider(OrderHistoryService)
       .useValue({})
-      .overrideProvider(HttpService)
-      .useValue({})
       .compile();
 
     service = module.get<OrderService>(OrderService);
     orderHistoryService = module.get<OrderHistoryService>(OrderHistoryService);
-    httpService = module.get(HttpService);
   });
 
   it('should be defined', () => {
@@ -192,33 +177,6 @@ describe('OrderService', () => {
     expect(await service.delete(9)).toEqual({affected: 1});
   });
 
-  it('should do get request and return entries', (done) => {
-    jest.spyOn(service['http'], 'post').mockReturnValue(of({data: require('../mocks/entries.json'), status: 200, statusText: 'OK', headers: {}, config: {}}));
-    let data = {};
-    mockOrderRepository.getEntries().subscribe({
-      next: (val) => {data = val},
-      error: (err) => { throw err; },
-      complete: () => {
-        expect(data).toEqual(require('../mocks/entries.json'))
-        done();
-      }
-    });
-  });
-  
-  it('should return error if request failed', (done) => {
-    jest.spyOn(service['http'], 'get').mockReturnValue(throwError('request failed'));
-    let data = {};
-    service.getEntries().subscribe({
-      next: (val) => {data = val},
-      error: (err) => {
-        expect(err).toBe('request failed');
-        done();
-      },
-      complete: () => {
-        expect(data).toBeUndefined();
-        done();
-      }
-    });
-  });
+  //TODO: Payservice
 
 });
