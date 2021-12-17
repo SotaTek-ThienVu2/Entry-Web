@@ -26,6 +26,9 @@ export class OrderService {
   /**Get 1 by id */
   async findOne (id): Promise<Order> {
     const order = await this.orderRepo.findOne({id})
+    if (!order) {
+      throw new NotFoundException();
+    }
     return order;
   }
   /**create order */

@@ -37,7 +37,7 @@ export class PaymentService {
                     dto.status = Status.CANCELLED;
                 }
                 this.paymentRepository.insert(dto);
-                return dto;
+                return this.paymentRepository.findOne(dto.orderNumber);
             }.bind(this));
         }else{
             return null;

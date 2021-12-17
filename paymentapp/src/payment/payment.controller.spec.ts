@@ -2,24 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto} from './dto/create-payment.dto';
-import { PaymentMockData} from './mock/mockdata';
-import { ConfigService } from '@nestjs/config';
+import { PaymentMockData, PaymentListMockData} from './mock/mockdata';
 import { Status } from '../common/Status';
 describe('Payment Controller', () => {
   let controller: PaymentController;
   let service : PaymentService;
-  let configService: ConfigService;
   const mockService = {
-    create: jest.fn().mockResolvedValue((dto: CreatePaymentDto, key: string)=> {
-      if(key === configService.get('SECRET_KEY')){
-        Promise.resolve(
-          {
-            ...dto,
-            id: 1
-          }
-        )
-      }
-    })
+    create: jest.fn().mockImplementation((dto: CreatePaymentDto, key: string)=> PaymentMockData),
+    findAll: jest.fn().mockImplementation(() => PaymentListMockData)
   }
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,7 +28,7 @@ describe('Payment Controller', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should return list payment', () => {
+  it('should return new payment', async () => {
     const dto :CreatePaymentDto ={
       orderId: 1,
       orderNumber: "gdJgkt9D",
@@ -54,7 +44,10 @@ describe('Payment Controller', () => {
       createTimestamp: new Date("2021-12-17T11:34:35.000Z"),
       updateTimestamp: new Date("2021-12-17T11:34:35.000Z")
     }
-    expect(service.create( dto, 'SOTATEK')).resolves.toEqual(PaymentMockData);
+    expect( await controller.create( dto, 'SOTATEK')).toEqual(PaymentMockData);
   });
 
+  it(`should return all payment`, () => {
+    expect(controller.findAll()).toEqual(PaymentListMockData);
+  });
 });

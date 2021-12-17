@@ -48,7 +48,6 @@ describe('OrderService', () => {
     }),
     delete: jest.fn().mockImplementation((id: number) => Promise.resolve({affected: 1}))
   };
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -176,7 +175,5 @@ describe('OrderService', () => {
     await mockOrderRepository.delete(9)
     expect(await service.delete(9)).toEqual({affected: 1});
   });
-
-  //TODO: Payservice
 
 });
