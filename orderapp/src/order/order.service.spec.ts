@@ -192,36 +192,33 @@ describe('OrderService', () => {
     expect(await service.delete(9)).toEqual({affected: 1});
   });
 
-  it('should do get request and return entries', (done) => {
-
-    jest.spyOn(service['http'], 'post').mockReturnValue(of({data: require('../mocks/entries.json'), status: 200, statusText: 'OK', headers: {}, config: {}}));
-    let data = {};
-
-    mockOrderRepository.getEntries().subscribe({
-      next: (val) => {data = val},
-      error: (err) => { throw err; },
-      complete: () => {
-        expect(data).toEqual(require('../mocks/entries.json'))
-        done();
-      }
-    });
-  });
+  // it('should do get request and return entries', (done) => {
+  //   jest.spyOn(service['http'], 'post').mockReturnValue(of({data: require('../mocks/entries.json'), status: 200, statusText: 'OK', headers: {}, config: {}}));
+  //   let data = {};
+  //   mockOrderRepository.getEntries().subscribe({
+  //     next: (val) => {data = val},
+  //     error: (err) => { throw err; },
+  //     complete: () => {
+  //       expect(data).toEqual(require('../mocks/entries.json'))
+  //       done();
+  //     }
+  //   });
+  // });
   
-  it('should return error if request failed', (done) => {
-    jest.spyOn(service['http'], 'get').mockReturnValue(throwError('request failed'));
-    let data = {};
-
-    service.getEntries().subscribe({
-      next: (val) => {data = val},
-      error: (err) => {
-        expect(err).toBe('request failed');
-        done();
-      },
-      complete: () => {
-        expect(data).toBeUndefined();
-        done();
-      }
-    });
-  });
+  // it('should return error if request failed', (done) => {
+  //   jest.spyOn(service['http'], 'get').mockReturnValue(throwError('request failed'));
+  //   let data = {};
+  //   service.getEntries().subscribe({
+  //     next: (val) => {data = val},
+  //     error: (err) => {
+  //       expect(err).toBe('request failed');
+  //       done();
+  //     },
+  //     complete: () => {
+  //       expect(data).toBeUndefined();
+  //       done();
+  //     }
+  //   });
+  // });
 
 });

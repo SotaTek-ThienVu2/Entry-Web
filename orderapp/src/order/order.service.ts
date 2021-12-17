@@ -125,8 +125,10 @@ export class OrderService {
         userID: userID
       })
     )
+    const delayTime = this.configService.get('X_SECOND');
+    const paymentHost = this.configService.get('PAYMENT_HOST');
     const options = {
-        hostname: 'payment',
+        hostname: paymentHost,
         port: 8002,
         path: '/payment',
         method: 'POST',
@@ -154,7 +156,7 @@ export class OrderService {
                     { status: OrderStatus.DELIVERED, updateTimestamp: new Date() },
                 );
                 this.orderHistoryService.create(responseJson.orderNumber, OrderStatus.DELIVERED);
-                }, 5000);
+                }, delayTime);
             } else {
                 self.cancel(responseJson.orderId);
             }
