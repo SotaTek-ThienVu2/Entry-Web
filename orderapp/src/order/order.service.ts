@@ -105,6 +105,7 @@ export class OrderService {
     return result;
   }
 
+  /**call api post payment from payment service */
   async pay(order: Order, userID: string) {
     const self = this;
     const http = require('http');

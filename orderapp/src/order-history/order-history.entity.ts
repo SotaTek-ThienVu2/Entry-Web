@@ -6,9 +6,11 @@ export class OrderHistory {
     @PrimaryGeneratedColumn()
     id: number;
 
+    /**order Number */
     @Column({length: 8})
     orderNumber: string;
 
+    /**status */
     @Column({
         type: 'enum',
         enum: OrderStatus,
@@ -16,6 +18,7 @@ export class OrderHistory {
     })
     status: string;
 
+    /**createTimestamp */
     @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
     createTimestamp: Date;
 }
