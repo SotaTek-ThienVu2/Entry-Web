@@ -12,8 +12,8 @@ export const OrderMockData = {
   price: 25000,
   quantity: 15,
   status: OrderStatus.DELIVERED,
-  createTimestamp: "2021-12-15T10:01:01.000Z",
-  updateTimestamp: "2021-12-15T10:11:54.000Z"
+  createTimestamp: new Date("2021-12-15T10:01:01.000Z"),
+  updateTimestamp: new Date("2021-12-15T10:11:54.000Z")
 };
 
 export const OrderListMockData = [
