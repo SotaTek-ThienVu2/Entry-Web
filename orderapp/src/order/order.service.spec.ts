@@ -176,40 +176,4 @@ describe('OrderService', () => {
     expect(await service.delete(9)).toEqual({affected: 1});
   });
 
-  var httpMocks = require('node-mocks-http');
-  const options = {
-    hostname: 'localhost',
-    port: 8002,
-    path: '/payment',
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'DUMMY-PIN': 'SOTATEK',
-    },
-  };
-  var req = httpMocks.createRequest(options);
-  var res = httpMocks.createResponse({
-    eventEmitter: require('events').EventEmitter
-  });
-  it('should do something', function(done) {
-    res.on('end', function() {
-      // expect(service.pay( OrderMockData , "12")).toBeCalled();
-      done();
-    });
-    route(req,res);
-    req.send('data sent in request');
-  });
-
-  function route(req,res){
-    var data= [];
-    req.on("data", chunk => {
-        data.push(chunk)
-    });
-    req.on("end", () => {
-        var newBuffer = Buffer.concat(data);
-        res.write(newBuffer);
-        res.end();
-    });
-    
-}
 });
