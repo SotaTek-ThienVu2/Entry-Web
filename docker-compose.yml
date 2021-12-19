@@ -22,8 +22,7 @@ services:
       - mariadb-order
     networks:
       - default 
-    # external_links:
-    #   - payments_web_1:payments.local
+    restart: on-failure
   payment:
     container_name: payment_service
     build: ./paymentapp
@@ -36,6 +35,7 @@ services:
       - mariadb-payment
     networks:
       - default 
+    restart: on-failure
   mariadb-order:
     container_name: order_database
     image: mariadb:10.2

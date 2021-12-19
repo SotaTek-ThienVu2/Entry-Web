@@ -183,7 +183,6 @@ describe('OrderService', () => {
     path: '/payment',
     method: 'POST',
     headers: {
-        'Content-Type': 'application/json',
         'DUMMY-PIN': 'SOTATEK',
     },
   };

@@ -132,8 +132,6 @@ export class OrderService {
         path: '/payment',
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': data.length,
             'DUMMY-PIN': secretK,
         },
     };
@@ -146,7 +144,8 @@ export class OrderService {
           throw new Error(error);
         })
         res.on('end', () => {
-            const responseJson = JSON.parse(responseString);
+            if (responseString) {
+              const responseJson = JSON.parse(responseString);
             if (responseJson.status === OrderStatus.CONFIRMED) {
                 self.confirm(responseJson.orderId);
                 setTimeout(() => {
@@ -158,6 +157,7 @@ export class OrderService {
                 }, delayTime);
             } else {
                 self.cancel(responseJson.orderId);
+            }
             }
         });
     });
