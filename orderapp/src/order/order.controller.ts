@@ -20,7 +20,7 @@ export class OrderController {
     return this.orderService.findAll(userID)
   }
   /**
-   * get order by id
+   * get order by order number
    * @param id 
    * @returns order
    */
@@ -59,7 +59,7 @@ export class OrderController {
   /**
    * cancel order
    * @param id
-   * @returns 
+   * @returns status code
    */
   @Put(':id/cancel')
   @ApiOperation({ summary: 'Cancel order' })
@@ -70,7 +70,7 @@ export class OrderController {
   /**
    * confirm order
    * @param id 
-   * @returns 
+   * @returns status code
    */
   @Put(':id/confirm')
   @ApiOperation({ summary: 'Confirm order' })
