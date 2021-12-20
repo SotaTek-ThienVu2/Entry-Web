@@ -27,29 +27,24 @@ export class PaymentService {
     async create(dto: CreatePaymentDto, key: string): Promise<Payment> {
         const secretK = this.configService.get('SECRET_KEY');
         if (key === secretK) {
-            const existedPaymet = await this.paymentRepository.findOne(dto.orderNumber);
+            const existedPaymet = await this.paymentRepository.findOne({
+                where: { orderNumber: dto.orderNumber }
+            });
+            // if orderNumber not dupplicate
             if (!existedPaymet) {
+                //Random result
                 if (Math.floor(Math.random() * 2) == 0) {
                     dto.status = Status.CONFIRMED;
                 }
                 else {
                     dto.status = Status.CANCELLED;
                 }
+                // insert
                 await this.paymentRepository.insert(dto);
-                const paymentResult = await this.paymentRepository.findOne({
-                    where: { orderNumber: dto.orderNumber }
-                });
-                return paymentResult;
             }
-            else {
-                return await this.paymentRepository.findOne({
-                    where: { orderNumber: dto.orderNumber }
-                });
-            }
-        } else {
-            return await this.paymentRepository.findOne({
-                where: { orderNumber: dto.orderNumber }
-            });
-        }
+        } 
+        return await this.paymentRepository.findOne({
+            where: { orderNumber: dto.orderNumber }
+        });
     }
 }
