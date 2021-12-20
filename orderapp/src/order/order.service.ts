@@ -47,6 +47,7 @@ export class OrderService {
       order.orderNumber = this.makeid(8);
       const insertResult = await this.orderRepo.insert(order);
       order.id = insertResult.generatedMaps[0].id;
+      // add history created
       const inserted = await this.orderHistoryService.create(
         order.orderNumber,
         OrderStatus.CREATED,
@@ -67,6 +68,7 @@ export class OrderService {
    */
   async cancel(id: number): Promise<Order> {
     let order = await this.orderRepo.findOne({ id });
+    //add history canceled
     this.orderHistoryService.create(order.orderNumber, OrderStatus.CANCELLED);
     if (
       order.status === OrderStatus.CREATED ||
@@ -82,6 +84,7 @@ export class OrderService {
   /**confirm order */
   async confirm(id: number): Promise<Order> {
     let order = await this.orderRepo.findOne({ id });
+    //add history confirmed
     this.orderHistoryService.create(order.orderNumber, OrderStatus.CONFIRMED);
     if (order.status === OrderStatus.CREATED) {
       await this.orderRepo.update(
@@ -112,6 +115,7 @@ export class OrderService {
     return result;
   }
 
+  /**call api pay from paymentapp */
   async pay(order: Order, userID: string) {
     const self = this;
     const http = require('http');

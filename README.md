@@ -20,6 +20,6 @@ This repository contains 3 projects:
     
 ### HOW TO TEST
 - After running 3 projects, please go to:
-  `http://localhost:8000` -> to test the client application,
-  `http://localhost:8001/api/` -> to Swagger document for Order Application
-  `http://localhost:8002/api/` -> to Swagger document for Payment Application
+  + `http://localhost:8000` -> to test the client application,
+  + `http://localhost:8001/api/` -> to Swagger document for Order Application
+  + `http://localhost:8002/api/` -> to Swagger document for Payment Application
