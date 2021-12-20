@@ -13,7 +13,7 @@ export class OrderService {
     private readonly orderHistoryService: OrderHistoryService,
     @InjectRepository(Order)
     private readonly orderRepo: Repository<Order>,
-  ) {}
+  ) { }
   /**Get all order by userID*/
   async findAll(userID: string): Promise<Order[]> {
     return await this.orderRepo
@@ -119,7 +119,7 @@ export class OrderService {
   async pay(order: Order, userID: string) {
     const self = this;
     const http = require('http');
-    const data = 
+    const data = new TextEncoder().encode(
       JSON.stringify({
         name: order.name,
         description: order.description,
@@ -131,7 +131,8 @@ export class OrderService {
         image: order.image,
         category: order.category,
         userID: userID,
-      })
+      }))
+
     const delayTime = this.configService.get('X_SECOND');
     const paymentHost = this.configService.get('PAYMENT_HOST');
     const secretK = this.configService.get('SECRET_KEY');
@@ -176,6 +177,6 @@ export class OrderService {
       });
     });
     req.write(data);
-    req.end(data);
+    req.end();
   }
 }
