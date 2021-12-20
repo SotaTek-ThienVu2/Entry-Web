@@ -1,5 +1,5 @@
 import { OrderStatus } from '../../common/enum/status.enum';
-import { CreateOrderDto } from '../dto/create-order.dto'
+import { CreateOrderDto } from '../dto/create-order.dto';
 export const OrderMockData = {
   id: 9,
   orderNumber: '5x5sjP3m',
@@ -12,8 +12,8 @@ export const OrderMockData = {
   price: 25000,
   quantity: 15,
   status: OrderStatus.DELIVERED,
-  createTimestamp: "2021-12-15T10:01:01.000Z",
-  updateTimestamp: "2021-12-15T10:11:54.000Z"
+  createTimestamp: new Date('2021-12-15T10:01:01.000Z'),
+  updateTimestamp: new Date('2021-12-15T10:01:01.000Z')
 };
 
 export const OrderListMockData = [
@@ -29,8 +29,8 @@ export const OrderListMockData = [
     price: 25000,
     quantity: 15,
     status: OrderStatus.CANCELLED,
-    createTimestamp: "2021-12-15T10:01:01.000Z",
-    updateTimestamp: "2021-12-15T10:01:01.000Z",
+    createTimestamp: '2021-12-15T10:01:01.000Z',
+    updateTimestamp: '2021-12-15T10:01:01.000Z',
   },
   {
     id: 8,
@@ -44,8 +44,8 @@ export const OrderListMockData = [
     price: 110,
     quantity: 1,
     status: OrderStatus.CANCELLED,
-    createTimestamp: "2021-12-15T10:01:01.000Z",
-    updateTimestamp: "2021-12-15T10:01:01.000Z",
+    createTimestamp: '2021-12-15T10:01:01.000Z',
+    updateTimestamp: '2021-12-15T10:01:01.000Z',
   },
   {
     id: 7,
@@ -59,17 +59,17 @@ export const OrderListMockData = [
     price: 110,
     quantity: 1,
     status: OrderStatus.CANCELLED,
-    createTimestamp: "2021-12-15T10:01:01.000Z",
-    updateTimestamp: "2021-12-15T10:01:01.000Z",
+    createTimestamp: '2021-12-15T10:01:01.000Z',
+    updateTimestamp: '2021-12-15T10:01:01.000Z',
   },
 ];
 
-export const CreateOrderMockDto : CreateOrderDto = {
-    name: "Bánh xe",
-    price: 109.5,
-    address: "Hà Nội",
-    quantity: 1,
-    description: "Hàng dởm",
-    category: "thời trang nam",
-    image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
+export const CreateOrderMockDto: CreateOrderDto = {
+  name: 'Bánh xe',
+  price: 109.5,
+  address: 'Hà Nội',
+  quantity: 1,
+  description: 'Hàng dởm',
+  category: 'thời trang nam',
+  image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
 };

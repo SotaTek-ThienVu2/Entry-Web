@@ -3,14 +3,14 @@ import ConstantsList from '../common/Constant'
 import React from 'react'
 import '../assets/css/Form.css'
 import { useForm } from "react-hook-form"
-const OrderForm = ({hide}) => {
+const OrderForm = ({ hide }) => {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const createOrder = async (data) => {
         const response = await post('orders', data)
-        if(!!response){
+        if (!!response) {
             alert(ConstantsList.SUCCESS)
         }
-        else{
+        else {
             alert(ConstantsList.ERROR)
         }
     };
@@ -28,7 +28,7 @@ const OrderForm = ({hide}) => {
                             type='text'
                             id='name'
                             name='name'
-                            {...register("name", { required: true})}
+                            {...register("name", { required: true })}
                         />
                         {Object.keys(errors).length !== 0 && (<ul className="error">
                             {errors.name?.type === 'required' && <li>Product name is required!</li>}

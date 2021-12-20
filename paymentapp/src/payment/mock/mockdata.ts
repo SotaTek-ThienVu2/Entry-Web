@@ -1,4 +1,4 @@
-import { Status } from "../../common/Status";
+import { Status } from "../../common/status";
 export const PaymentMockData = {
     id: 1,
     orderId: 1,

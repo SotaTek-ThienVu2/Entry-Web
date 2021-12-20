@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderModule } from './order/order.module';
-import {OrderHistoryModule} from './order-history/order-history.module'
+import { OrderHistoryModule } from './order-history/order-history.module'
 import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
 @Module({
@@ -24,8 +24,9 @@ import { ConfigService } from '@nestjs/config';
     OrderModule,
     OrderHistoryModule,
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      envFilePath: '.env'
     })
   ],
 })
-export class AppModule {}
+export class AppModule { }

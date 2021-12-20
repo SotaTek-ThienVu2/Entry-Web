@@ -14,7 +14,7 @@ const Modal = ({ isShowing, hide }) => isShowing ? ReactDOM.createPortal(
                     </button>
                 </div>
                 <div className="modal-body">
-                    <OrderForm hide ={hide} />
+                    <OrderForm hide={hide} />
                 </div>
             </div>
         </div>

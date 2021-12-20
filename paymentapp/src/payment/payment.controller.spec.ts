@@ -1,14 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
-import { CreatePaymentDto} from './dto/create-payment.dto';
-import { PaymentMockData, PaymentListMockData} from './mock/mockdata';
-import { Status } from '../common/Status';
+import { CreatePaymentDto } from './dto/create-payment.dto';
+import { PaymentMockData, PaymentListMockData } from './mock/mockdata';
+import { Status } from '../common/status';
 describe('Payment Controller', () => {
   let controller: PaymentController;
-  let service : PaymentService;
+  let service: PaymentService;
   const mockService = {
-    create: jest.fn().mockImplementation((dto: CreatePaymentDto, key: string)=> PaymentMockData),
+    create: jest.fn().mockImplementation((dto: CreatePaymentDto, key: string) => PaymentMockData),
     findAll: jest.fn().mockImplementation(() => PaymentListMockData)
   }
   beforeEach(async () => {
@@ -16,9 +16,9 @@ describe('Payment Controller', () => {
       controllers: [PaymentController],
       providers: [PaymentService]
     })
-    .overrideProvider(PaymentService)
-    .useValue(mockService)
-    .compile();
+      .overrideProvider(PaymentService)
+      .useValue(mockService)
+      .compile();
 
     controller = module.get<PaymentController>(PaymentController);
     service = module.get<PaymentService>(PaymentService);
@@ -29,7 +29,7 @@ describe('Payment Controller', () => {
   });
 
   it('should return new payment', async () => {
-    const dto :CreatePaymentDto ={
+    const dto: CreatePaymentDto = {
       orderId: 1,
       orderNumber: "gdJgkt9D",
       userID: "12",
@@ -44,7 +44,7 @@ describe('Payment Controller', () => {
       createTimestamp: new Date("2021-12-17T11:34:35.000Z"),
       updateTimestamp: new Date("2021-12-17T11:34:35.000Z")
     }
-    expect( await controller.create( dto, 'SOTATEK')).toEqual(PaymentMockData);
+    expect(await controller.create(dto, 'SOTATEK')).toEqual(PaymentMockData);
   });
 
   it(`should return all payment`, () => {

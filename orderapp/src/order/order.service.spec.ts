@@ -176,7 +176,7 @@ describe('OrderService', () => {
     expect(await service.delete(9)).toEqual({affected: 1});
   });
 
-  var httpMocks = require('node-mocks-http');
+  const httpMocks = require('node-mocks-http');
   const options = {
     hostname: 'localhost',
     port: 8002,
@@ -186,8 +186,8 @@ describe('OrderService', () => {
         'DUMMY-PIN': 'SOTATEK',
     },
   };
-  var req = httpMocks.createRequest(options);
-  var res = httpMocks.createResponse({
+  const req = httpMocks.createRequest(options);
+  const res = httpMocks.createResponse({
     eventEmitter: require('events').EventEmitter
   });
   it('should do something', function(done) {
@@ -200,12 +200,12 @@ describe('OrderService', () => {
   });
 
   function route(req,res){
-    var data= [];
+    let data= [];
     req.on("data", chunk => {
         data.push(chunk)
     });
     req.on("end", () => {
-        var newBuffer = Buffer.concat(data);
+        const newBuffer = Buffer.concat(data);
         res.write(newBuffer);
         res.end();
     });

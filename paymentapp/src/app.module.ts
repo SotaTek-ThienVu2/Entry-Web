@@ -17,7 +17,7 @@ import { ConfigService } from '@nestjs/config';
         database: configService.get('TYPEORM_DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
-        charset:"utf8mb4"
+        charset: "utf8mb4"
       }),
       inject: [ConfigService],
     }),
@@ -27,4 +27,4 @@ import { ConfigService } from '@nestjs/config';
     })
   ],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { OrderService } from './order.service';
-import {OrderHistoryService} from '../order-history/order-history.service';
+import { OrderHistoryService } from '../order-history/order-history.service';
 import { OrderController } from './order.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Order } from './order.entity';
-import {OrderHistory} from '../order-history/order-history.entity';
+import { OrderHistory } from '../order-history/order-history.entity';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
@@ -21,8 +21,7 @@ import { ConfigService } from '@nestjs/config';
         maxRedirects: configService.get('HTTP_MAX_REDIRECTS'),
       }),
       inject: [ConfigService],
-    })
-    
+    }),
   ],
 })
 export class OrderModule {}

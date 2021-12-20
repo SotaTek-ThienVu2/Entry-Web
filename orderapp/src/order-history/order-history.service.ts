@@ -8,17 +8,17 @@ export class OrderHistoryService {
     constructor(
         @InjectRepository(OrderHistory)
         private readonly orderHistoryRepository: Repository<OrderHistory>,
-    ) {}
+    ) { }
 
     create(orderNumber: string, status: OrderStatus): Promise<InsertResult> {
         return this.orderHistoryRepository.insert({
             status,
             orderNumber,
-            createTimestamp : new Date()
+            createTimestamp: new Date()
         });
     }
 
-    async findHistoryOrder (orderNumber): Promise<OrderHistory[]> {
-        return await this.orderHistoryRepository.find({orderNumber})
+    async findHistoryOrder(orderNumber): Promise<OrderHistory[]> {
+        return await this.orderHistoryRepository.find({ orderNumber })
     }
 }

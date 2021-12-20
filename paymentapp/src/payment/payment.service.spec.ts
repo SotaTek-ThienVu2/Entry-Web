@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentService } from './payment.service';
 import { PaymentMockData, PaymentListMockData} from './mock/mockdata';
 import { CreatePaymentDto} from './dto/create-payment.dto';
-import { Status } from '../common/Status';
+import { Status } from '../common/status';
 
 describe('PaymentService', () => {
   let service: PaymentService;

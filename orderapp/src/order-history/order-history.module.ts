@@ -8,4 +8,4 @@ import { OrderHistory } from './order-history.entity';
   providers: [OrderHistoryService],
   exports: [OrderHistoryService, TypeOrmModule],
 })
-export class OrderHistoryModule {}
+export class OrderHistoryModule { }

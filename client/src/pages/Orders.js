@@ -1,9 +1,9 @@
 import React from "react";
-import OrderComponent from "./OrderComponent";
-import Modal from "./Modal";
-import useModal from './useModal';
+import OrderComponent from "../components/OrderList";
+import Modal from "../components/Modal";
+import useModal from '../components/useModal';
 const OrderPage = () => {
-  const {isShowing, toggle} = useModal();
+  const { isShowing, toggle } = useModal();
   return (
     <div className="ui column container">
       <div className="ui vertical animated button" tabIndex="0" onClick={toggle}>

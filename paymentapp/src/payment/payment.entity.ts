@@ -1,5 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import { Status } from '../common/Status';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Status } from '../common/status';
 @Entity()
 export class Payment {
     /**ID */
@@ -9,14 +9,14 @@ export class Payment {
     @Column()
     orderId: number;
     /**Order number */
-    @Column({length: 8, unique: true})
+    @Column({ length: 8, unique: true })
     orderNumber: string;
-    @Column({length: 8})
+    @Column({ length: 8 })
     userID: string;
     /**name */
-    @Column({length: 255})
+    @Column({ length: 255 })
     name: string;
-    @Column({length: 255})
+    @Column({ length: 255 })
     category: string;
     @Column('text')
     image: string;
@@ -37,9 +37,9 @@ export class Payment {
     })
     status: Status;
     /**created date */
-    @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createTimestamp: Date;
     /**modified date */
-    @Column({type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updateTimestamp: Date;
 }
